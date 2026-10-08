@@ -19,8 +19,6 @@
     <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/sonarcloud.yml/badge.svg" alt="SonarQube Cloud scan"></a>
     <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=alert_status" alt="Quality Gate Status"></a>
     <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=coverage" alt="Coverage"></a>
-    <a href="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/build-status/main"><img src="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/badges/build.png?b=main" alt="Scrutinizer Build Status"></a>
-    <a href="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/?branch=main"><img src="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/badges/quality-score.png?b=main" alt="Scrutinizer Code Quality"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
@@ -302,7 +300,7 @@ Runs the plain-JVM tests for the simulation, the settings parsing and the shadin
 
 ## Continuous integration
 
-Every push to `main` and every pull request runs six workflows: the tests on Java 17 and 21 and an APK build that fails if it requests any permission; code style; the documentation checks; a security check of the manifest and a gitleaks secret scan of the files and history; a GitGuardian scan; and a SonarCloud analysis with coverage. Scrutinizer builds and analyzes each push once the repository is added on scrutinizer-ci.com. See [CI](docs/CI.md) for what each one checks and the secrets they need.
+Every push to `main` and every pull request runs six workflows: the tests on Java 17 and 21 and an APK build that fails if it requests any permission; code style; the documentation checks; a security check of the manifest and a gitleaks secret scan of the files and history; a GitGuardian scan; and a SonarCloud analysis with coverage. See [CI](docs/CI.md) for what each one checks and the secrets they need.
 
 ## Documentation
 
