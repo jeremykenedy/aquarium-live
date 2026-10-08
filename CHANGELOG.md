@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.3
+
+### Added
+
+- Kinds in a school: One kind per school, Mixed kinds, or Random. With Mixed kinds, different fish from the scene swim together in the same school, and the school spreads out to fit its biggest fish. Surprise me picks it too.
+
+### Changed
+
+- The README no longer opens with a large screenshot under the badges; the screenshots sit in the Scenes, Looks and Day and night sections.
+- The GitHub stars badge sits with the Follow, Star and Sponsor badges, and the CodeFactor badge now shows the repository's grade.
+
 ## 1.0.2
 
 ### Fixed

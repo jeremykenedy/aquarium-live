@@ -16,6 +16,10 @@ public final class Config {
     public static final String STYLE = "style";
     public static final String FISH_COUNT = "fish_count";
     public static final String SCHOOLS = "schools";
+    public static final String SCHOOL_MIX = "school_mix";
+    /** School mix values: every member the same kind, or kinds mixed together. */
+    public static final String SINGLE = "single";
+    public static final String MIXED = "mixed";
     public static final String SPEED = "speed";
     public static final String PLANTS = "plants";
     public static final String BUBBLES = "bubbles";
@@ -49,6 +53,8 @@ public final class Config {
     public int fishCount = 20;
     /** 0 none, 1 one school, 2 a few schools, 3 huge schools. */
     public int schools = 2;
+    /** True when a school can hold different kinds of fish swimming together. */
+    public boolean mixedSchools = false;
     /** Which sea-life groups may appear (see Species.GROUPS). */
     public Set<String> seaLife = new HashSet<>(Arrays.asList(Species.GROUPS));
     /** 0 none, 1 a little, 2 some, 3 lots. */
@@ -100,6 +106,7 @@ public final class Config {
         c.lighting = random(all, values.get(LIGHTING)) ? pick(RANDOM_LIGHTING, rng) : parseEnum(values.get(LIGHTING), Lighting.class, c.lighting);
         c.fishCount = random(all, values.get(FISH_COUNT)) ? pick(FISH_COUNTS, rng) : parseChoice(values.get(FISH_COUNT), FISH_COUNTS, c.fishCount);
         c.schools = random(all, values.get(SCHOOLS)) ? pick(SCHOOL_LEVELS, rng) : parseChoice(values.get(SCHOOLS), SCHOOL_LEVELS, c.schools);
+        c.mixedSchools = random(all, values.get(SCHOOL_MIX)) ? rng.nextBoolean() : parseMix(values.get(SCHOOL_MIX), c.mixedSchools);
         c.seaLife = all || isRandomSet(values.get(SEA_LIFE)) ? randomMix(rng) : parseSet(values.get(SEA_LIFE), c.seaLife);
         c.seaLifeAmount = random(all, values.get(SEA_LIFE_AMOUNT)) ? pick(SEA_LIFE_LEVELS, rng) : parseChoice(values.get(SEA_LIFE_AMOUNT), SEA_LIFE_LEVELS, c.seaLifeAmount);
         c.shimmer = random(all, values.get(SHIMMER)) ? pick(SHIMMER_LEVELS, rng) : parseChoice(values.get(SHIMMER), SHIMMER_LEVELS, c.shimmer);
@@ -112,6 +119,17 @@ public final class Config {
         c.fps = parseChoice(values.get(FPS), FRAME_RATES, c.fps);
         c.clock = parseBool(values.get(CLOCK), c.clock);
         return c;
+    }
+
+    private static boolean parseMix(Object value, boolean fallback) {
+        String s = value == null ? "" : value.toString().trim();
+        if (MIXED.equalsIgnoreCase(s)) {
+            return true;
+        }
+        if (SINGLE.equalsIgnoreCase(s)) {
+            return false;
+        }
+        return fallback;
     }
 
     private static boolean random(boolean all, Object value) {

@@ -148,6 +148,7 @@ public final class Sim {
     public static final class School {
         final Species species;
         final int size;
+        float spread;
         float x;
         float y;
         float z;
@@ -161,11 +162,12 @@ public final class Sim {
         School(Species species, int size) {
             this.species = species;
             this.size = size;
+            this.spread = species.length;
         }
 
         /** Spread of the school, in world units at the front glass. */
         float radius() {
-            return species.length * (1.4f + 0.75f * (float) Math.sqrt(size));
+            return spread * (1.4f + 0.75f * (float) Math.sqrt(size));
         }
     }
 
@@ -381,21 +383,30 @@ public final class Sim {
 
     private void stockSchools() {
         List<Species> schoolers = new ArrayList<>();
+        List<Species> allFish = new ArrayList<>();
         for (Species s : Species.ALL) {
-            if (s.schooling && s.livesIn(cfg.theme)) {
-                schoolers.add(s);
+            if (s.kind == Species.Kind.FISH && s.livesIn(cfg.theme)) {
+                allFish.add(s);
+                if (s.schooling) {
+                    schoolers.add(s);
+                }
             }
         }
         int[] sizes = schoolSizes(cfg.schools);
         for (int g = 0; g < sizes.length; g++) {
             School school = new School(schoolers.get(g % schoolers.size()), sizes[g]);
+            Species[] members = new Species[sizes[g]];
+            for (int i = 0; i < members.length; i++) {
+                members[i] = cfg.mixedSchools ? allFish.get(rnd.nextInt(allFish.size())) : school.species;
+                school.spread = Math.max(school.spread, members[i].length);
+            }
             school.z = 0.2f + rnd.nextFloat() * 0.55f;
             school.x = w * (0.2f + 0.6f * rnd.nextFloat());
             school.y = (yMin(school.species, school.z) + yMax(school.species, school.z)) * 0.5f;
             pickSchoolTarget(school);
             schools.add(school);
             for (int i = 0; i < sizes[g]; i++) {
-                Creature f = new Creature(school.species, school, rnd);
+                Creature f = new Creature(members[i], school, rnd);
                 f.z = clampZ(school.z + f.oz * 0.06f);
                 f.x = clamp(school.x + f.ox * school.radius() * scale(f.z) * 0.5f, xMin(f), xMax(f));
                 f.y = clamp(school.y + f.oy * school.radius() * scale(f.z) * 0.3f, yMin(f.species, f.z), yMax(f.species, f.z));

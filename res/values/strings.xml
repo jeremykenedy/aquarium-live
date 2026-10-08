@@ -18,6 +18,7 @@
     <string name="particles">Floating specks</string>
     <string name="fish_count">Fish</string>
     <string name="schools">Schools</string>
+    <string name="school_mix">Kinds in a school</string>
     <string name="speed">Swimming speed</string>
     <string name="sea_life">Which sea life</string>
     <string name="sea_life_summary">Each scene shows only the animals that live there. The fish tank has none. Pick A random mix each time to let it choose.</string>

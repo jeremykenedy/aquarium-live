@@ -29,6 +29,7 @@ The tests run on a plain JVM, with no Android device or emulator. They cover the
 | Render size | Automatic uses the window; Retro draws 540 lines; fixed choices keep the screen's shape and are capped at its height; tall or unknown screens |
 | Frame rate | Fixed 30 and 60; automatic stays at 60 when frames keep up and drops to a steady 30 when they do not; the warm-up and zero-length frames are ignored; restart |
 | Art cache | Old art is deleted and current art kept; a missing folder or an undeletable file does not fail |
+| Mixed schools | One kind per school keeps each school to a single kind in every scene; Mixed kinds puts more than one kind in a school, only fish from that scene, spread out for the biggest member, at the same school sizes, and stays finite over a simulated minute; the setting parses, falls back, and goes both ways on Random and Surprise me |
 | Edge cases | Every scene has solo and schooling fish; no specks; zero and negative time steps; seahorses with no plants; two airstones on very wide screens; fish on top of each other or on a shark; a lifted octopus; an empty tank; airstone-only bubbles; whales at every amount |
 
 ## Coverage

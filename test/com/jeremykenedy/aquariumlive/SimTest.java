@@ -37,6 +37,8 @@ public final class SimTest {
         toneBands();
         toneQuantize();
         everySceneHasSoloAndSchoolingFish();
+        schoolMixParses();
+        mixedSchoolsHoldDifferentKinds();
         settingsDefaultsAreRealChoices();
         tintCoversEveryHour();
         configRejectsOutOfRangeNumbers();
@@ -360,12 +362,93 @@ public final class SimTest {
             }
             lists++;
         }
-        check("every list setting was checked (" + lists + ")", lists == 15);
+        check("every list setting was checked (" + lists + ")", lists == 16);
     }
 
     private static String attr(String attrs, String name) {
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("android:" + name + "=\"([^\"]*)\"").matcher(attrs);
         return m.find() ? m.group(1) : "";
+    }
+
+    static void schoolMixParses() {
+        check("schools hold one kind by default", !Config.fromMap(new HashMap<String, Object>()).mixedSchools);
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.SCHOOL_MIX, "mixed");
+        check("mixed kinds parsed", Config.fromMap(m).mixedSchools);
+        m.put(Config.SCHOOL_MIX, " SINGLE ");
+        check("one kind parsed in any case", !Config.fromMap(m).mixedSchools);
+        m.put(Config.SCHOOL_MIX, "rainbow");
+        check("an unknown school mix falls back to one kind", !Config.fromMap(m).mixedSchools);
+        m.put(Config.SCHOOL_MIX, Boolean.TRUE);
+        check("a school mix of the wrong type falls back to one kind", !Config.fromMap(m).mixedSchools);
+        m.put(Config.SCHOOL_MIX, "RANDOM");
+        java.util.Set<Boolean> seen = new java.util.HashSet<>();
+        for (int seed = 0; seed < 100; seed++) {
+            seen.add(Config.fromMap(m, rng(seed)).mixedSchools);
+        }
+        check("a random school mix goes both ways", seen.size() == 2);
+        Map<String, Object> surprise = new HashMap<>();
+        surprise.put(Config.SURPRISE, Boolean.TRUE);
+        surprise.put(Config.SCHOOL_MIX, "single");
+        java.util.Set<Boolean> surprised = new java.util.HashSet<>();
+        for (int seed = 0; seed < 100; seed++) {
+            surprised.add(Config.fromMap(surprise, rng(seed)).mixedSchools);
+        }
+        check("surprise me also picks the school mix", surprised.size() == 2);
+    }
+
+    private static java.util.Map<Sim.School, java.util.Set<String>> kindsBySchool(Sim sim) {
+        java.util.Map<Sim.School, java.util.Set<String>> kinds = new java.util.HashMap<>();
+        for (Sim.Creature c : sim.creatures) {
+            if (c.school() != null) {
+                kinds.computeIfAbsent(c.school(), k -> new java.util.HashSet<>()).add(c.species.id);
+            }
+        }
+        return kinds;
+    }
+
+    static void mixedSchoolsHoldDifferentKinds() {
+        for (Config.Theme theme : Config.Theme.values()) {
+            Config single = new Config();
+            single.theme = theme;
+            single.schools = 3;
+            Sim one = new Sim(single, 1920f, 21);
+            boolean pure = true;
+            for (java.util.Set<String> kinds : kindsBySchool(one).values()) {
+                pure &= kinds.size() == 1;
+            }
+            check(theme + ": one kind per school keeps every school to a single kind", pure && kindsBySchool(one).size() == 3);
+
+            Config mixed = new Config();
+            mixed.theme = theme;
+            mixed.schools = 3;
+            mixed.mixedSchools = true;
+            Sim many = new Sim(mixed, 1920f, 21);
+            boolean blended = false;
+            boolean belongs = true;
+            boolean roomy = true;
+            int members = 0;
+            for (Sim.Creature c : many.creatures) {
+                Sim.School school = c.school();
+                if (school == null) {
+                    continue;
+                }
+                members++;
+                belongs &= c.species.kind == Species.Kind.FISH && c.species.livesIn(theme);
+                roomy &= school.radius() >= c.species.length;
+            }
+            for (java.util.Set<String> kinds : kindsBySchool(many).values()) {
+                blended |= kinds.size() > 1;
+            }
+            check(theme + ": mixed schools hold more than one kind", blended);
+            check(theme + ": mixed school members are fish from this scene", belongs);
+            check(theme + ": a mixed school spreads out for its biggest member", roomy);
+            check(theme + ": mixing keeps the school sizes", members == 28 + 26 + 24);
+            for (int i = 0; i < 30 * 60; i++) {
+                many.update(1f / 30f);
+            }
+            check(theme + ": mixed schools stay finite after a minute", finite(many));
+        }
     }
 
     static void everySceneHasSoloAndSchoolingFish() {

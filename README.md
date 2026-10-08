@@ -24,8 +24,6 @@
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
-
-
 <p align="center">
     <a href="https://app.aikido.dev/repositories/3326671"><img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Secured by Aikido" height="32"></a>
 </p>
@@ -35,10 +33,6 @@
     <a href="https://github.com/jeremykenedy/aquarium-live" title="Open the repository and click Star"><img src="https://img.shields.io/badge/Star-this%20repo-yellow?logo=github&amp;style=social" alt="Star this repo"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/stargazers"><img src="https://img.shields.io/github/stars/jeremykenedy/aquarium-live?style=social" alt="Star aquarium-live on GitHub"></a>
     <a href="https://github.com/sponsors/jeremykenedy" title="Sponsor jeremykenedy"><img src="https://img.shields.io/badge/Sponsor-jeremykenedy-ea4aaa?logo=githubsponsors&amp;logoColor=white" alt="Sponsor jeremykenedy"></a>
-</p>
-
-<p align="center">
-    <img src="docs/screenshots/coral-reef-realistic.jpg" alt="Coral reef scene running as the TV screensaver" width="800">
 </p>
 
 ## Table of Contents
@@ -84,7 +78,7 @@ Then open **Aquarium Live** on the TV to choose a scene and look. The full walkt
 - Four scenes: open ocean, coral reef, kelp forest and a planted fish tank.
 - Six looks, from realistic to cartoon, a glossy 3D-movie look, a hand-painted classic look and a retro desktop screensaver look.
 - Sharks, whales, dolphins, manta rays, sea turtles, octopuses, jellyfish, seahorses, crabs and starfish, each group switchable on or off.
-- Fish counts from a few to a ton, plus schools that swim together and scatter around sharks and dolphins.
+- Fish counts from a few to a ton, plus schools that swim together and scatter around sharks and dolphins, either one kind per school or different kinds mixed together.
 - Sunlight shimmer: shafts of light from the surface and rippling light on the sand.
 - Day, evening and night lighting, or lighting that follows the clock.
 - Random choices for every scene, look and content setting, or **Surprise me** to randomize them all each time it starts.
@@ -158,6 +152,7 @@ Open **Aquarium Live** from the apps on your TV, or run `adb shell am start -n c
 | Floating specks | On, Off, Random | On |
 | Fish | A few (6), A handful (12), A bunch (20), A lot (30), A ton (45), Random | A bunch |
 | Schools | None, One school, A few schools, Huge schools, Random | A few schools |
+| Kinds in a school | One kind per school, Mixed kinds, Random | One kind per school |
 | Swimming speed | Calm, Normal, Lively, Random | Normal |
 | Which sea life | Sharks, Whales, Dolphins, Manta rays, Sea turtles, Octopuses, Jellyfish, Seahorses, Crabs and starfish, A random mix each time | All except the random mix |
 | How much sea life | None, A little, Some, Lots, Random | Some |
@@ -172,7 +167,7 @@ Every scene, look and content setting has a **Random** choice, picked again each
 
 **Surprise me** randomizes all of them at once, without changing their saved choices: while it is on they are greyed out, and turning it off brings them back as they were. Brightness, resolution, frame rate and the clock are never randomized, so the screensaver never surprises you with a brighter screen or a slower frame rate.
 
-Schools come on top of the fish count: one school is 14 fish, a few schools are 14 and 18, and huge schools are 28, 26 and 24. Each scene only shows the sea life that lives there.
+Schools come on top of the fish count: one school is 14 fish, a few schools are 14 and 18, and huge schools are 28, 26 and 24. With **Mixed kinds**, each school is made of different fish from the scene swimming together, such as clownfish, tangs and chromis on the reef. Each scene only shows the sea life that lives there.
 
 ## Privacy
 

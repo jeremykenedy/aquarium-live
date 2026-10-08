@@ -32,6 +32,7 @@ Each of those settings also has its own **Random** choice, picked again on every
 | Floating specks | On or Off |
 | Fish | 6, 12, 20, 30 or 45 |
 | Schools | None, One, A few, Huge |
+| Kinds in a school | One kind per school or Mixed kinds |
 | Swimming speed | Calm, Normal, Lively |
 | Which sea life | A random mix: each group has an even chance, and at least one is always in |
 | How much sea life | None, A little, Some, Lots |
@@ -56,6 +57,7 @@ Brightness, Resolution, Frame rate and Show the time are never randomized, so th
 |---------|---------|---------|-------|
 | Fish | A few (6), A handful (12), A bunch (20), A lot (30), A ton (45), Random | A bunch | Individual fish, not counting schools. |
 | Schools | None, One school, A few schools, Huge schools, Random | A few schools | Added on top of the fish count: one school is 14 fish, a few are 14 and 18, huge are 28, 26 and 24. Schools swim as one and scatter around sharks and dolphins. |
+| Kinds in a school | One kind per school, Mixed kinds, Random | One kind per school | Mixed kinds fills each school with different fish from the scene, which swim together at the school's pace. The school spreads out to fit its biggest fish. |
 | Swimming speed | Calm, Normal, Lively, Random | Normal | Calm is 0.6 times normal speed, Lively 1.4 times. |
 
 ## Sea life
