@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_names">
+        <item>Open ocean</item>
+        <item>Coral reef</item>
+        <item>Kelp forest</item>
+        <item>Fish tank</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>OCEAN</item>
+        <item>REEF</item>
+        <item>KELP_FOREST</item>
+        <item>FISH_TANK</item>
+    </string-array>
+    <string-array name="style_names">
+        <item>Realistic</item>
+        <item>Animated</item>
+        <item>Cartoon</item>
+        <item>3D movie</item>
+        <item>Hand-painted classic</item>
+        <item>Retro screensaver</item>
+    </string-array>
+    <string-array name="style_values">
+        <item>REALISTIC</item>
+        <item>ANIMATED</item>
+        <item>CARTOON</item>
+        <item>MOVIE</item>
+        <item>PAINTED</item>
+        <item>RETRO</item>
+    </string-array>
+    <string-array name="plant_names">
+        <item>Sparse</item>
+        <item>Normal</item>
+        <item>Lush</item>
+    </string-array>
+    <string-array name="plant_values">
+        <item>0.5</item>
+        <item>1.0</item>
+        <item>1.6</item>
+    </string-array>
+    <string-array name="shimmer_names">
+        <item>Off</item>
+        <item>Soft</item>
+        <item>Bright</item>
+    </string-array>
+    <string-array name="level3_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="lighting_names">
+        <item>Day (bright)</item>
+        <item>Evening (warm)</item>
+        <item>Night (dim)</item>
+        <item>Follow the clock</item>
+    </string-array>
+    <string-array name="lighting_values">
+        <item>DAY</item>
+        <item>EVENING</item>
+        <item>NIGHT</item>
+        <item>AUTO</item>
+    </string-array>
+    <string-array name="bubble_names">
+        <item>Off</item>
+        <item>Airstone</item>
+        <item>Airstone and fish bubbles</item>
+    </string-array>
+    <string-array name="fish_names">
+        <item>A few</item>
+        <item>A handful</item>
+        <item>A bunch</item>
+        <item>A lot</item>
+        <item>A ton</item>
+    </string-array>
+    <string-array name="fish_values">
+        <item>6</item>
+        <item>12</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+    </string-array>
+    <string-array name="school_names">
+        <item>None</item>
+        <item>One school</item>
+        <item>A few schools</item>
+        <item>Huge schools</item>
+    </string-array>
+    <string-array name="level4_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="speed_names">
+        <item>Calm</item>
+        <item>Normal</item>
+        <item>Lively</item>
+    </string-array>
+    <string-array name="speed_values">
+        <item>0.6</item>
+        <item>1.0</item>
+        <item>1.4</item>
+    </string-array>
+    <string-array name="sea_life_names">
+        <item>Sharks</item>
+        <item>Whales</item>
+        <item>Dolphins</item>
+        <item>Manta rays</item>
+        <item>Sea turtles</item>
+        <item>Octopuses</item>
+        <item>Jellyfish</item>
+        <item>Seahorses</item>
+        <item>Crabs and starfish</item>
+    </string-array>
+    <string-array name="sea_life_values">
+        <item>sharks</item>
+        <item>whales</item>
+        <item>dolphins</item>
+        <item>rays</item>
+        <item>turtles</item>
+        <item>octopuses</item>
+        <item>jellyfish</item>
+        <item>seahorses</item>
+        <item>crabs</item>
+    </string-array>
+    <string-array name="amount_names">
+        <item>None</item>
+        <item>A little</item>
+        <item>Some</item>
+        <item>Lots</item>
+    </string-array>
+    <string-array name="brightness_names">
+        <item>Full</item>
+        <item>80%</item>
+        <item>60%</item>
+        <item>40%</item>
+    </string-array>
+    <string-array name="brightness_values">
+        <item>100</item>
+        <item>80</item>
+        <item>60</item>
+        <item>40</item>
+    </string-array>
+    <string-array name="resolution_names">
+        <item>Automatic (recommended)</item>
+        <item>4K (2160p)</item>
+        <item>1440p</item>
+        <item>1080p</item>
+    </string-array>
+    <string-array name="resolution_values">
+        <item>0</item>
+        <item>2160</item>
+        <item>1440</item>
+        <item>1080</item>
+    </string-array>
+    <string-array name="fps_names">
+        <item>Automatic (recommended)</item>
+        <item>60 frames per second</item>
+        <item>30 frames per second</item>
+    </string-array>
+    <string-array name="fps_values">
+        <item>0</item>
+        <item>60</item>
+        <item>30</item>
+    </string-array>
+</resources>

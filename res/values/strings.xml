@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aquarium Live</string>
+    <string name="preview">Preview</string>
+    <string name="preview_summary">See the screensaver with these settings. Press any button to come back.</string>
+    <string name="cat_scene">Scene</string>
+    <string name="cat_fish">Fish</string>
+    <string name="cat_sea_life">Sea life</string>
+    <string name="cat_display">Display</string>
+    <string name="theme">Scene</string>
+    <string name="style">Style</string>
+    <string name="plants">Plants and coral</string>
+    <string name="shimmer">Sunlight shimmer</string>
+    <string name="lighting">Day or night</string>
+    <string name="bubbles">Bubbles</string>
+    <string name="particles">Floating specks</string>
+    <string name="particles_summary">Tiny bits drifting in the water</string>
+    <string name="fish_count">Fish</string>
+    <string name="schools">Schools</string>
+    <string name="speed">Swimming speed</string>
+    <string name="sea_life">Which sea life</string>
+    <string name="sea_life_summary">Each scene shows only the animals that live there. The fish tank has none.</string>
+    <string name="sea_life_amount">How much sea life</string>
+    <string name="brightness">Brightness</string>
+    <string name="resolution">Resolution</string>
+    <string name="fps">Frame rate</string>
+    <string name="clock">Show the time</string>
+    <string name="clock_summary">A small clock that moves now and then</string>
+    <string name="reset">Reset to defaults</string>
+</resources>
