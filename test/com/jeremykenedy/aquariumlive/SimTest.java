@@ -14,6 +14,12 @@ public final class SimTest {
         configParsesStoredValues();
         configRejectsBadValues();
         tintFollowsTheClock();
+        randomSettingsPickFromTheirChoices();
+        randomReachesEveryChoice();
+        surpriseRandomisesEverythingButDisplay();
+        surpriseOffKeepsChoices();
+        randomSeaLifeMix();
+        specksParse();
         fishCountMatchesConfig();
         onlyThemeSpecies();
         noSchoolsWhenOff();
@@ -114,6 +120,188 @@ public final class SimTest {
         check("unparseable boolean falls back", !c.clock);
         check("shimmer off the list falls back", c.shimmer == 1);
         check("sea life that is not a set falls back to everything", c.seaLife.size() == Species.GROUPS.length);
+    }
+
+    private static Map<String, Object> allRandom() {
+        Map<String, Object> m = new HashMap<>();
+        for (String k : new String[] {Config.THEME, Config.STYLE, Config.LIGHTING, Config.FISH_COUNT, Config.SCHOOLS, Config.SEA_LIFE_AMOUNT,
+            Config.SHIMMER, Config.SPEED, Config.PLANTS, Config.BUBBLES, Config.PARTICLES}) {
+            m.put(k, "RANDOM");
+        }
+        return m;
+    }
+
+    /** Sequential seeds give java.util.Random near-identical first draws, so spread them out. */
+    private static java.util.Random rng(long seed) {
+        return new java.util.Random(seed * 0x9E3779B97F4A7C15L ^ 0x2545F4914F6CDD1DL);
+    }
+
+    private static boolean in(int v, int[] options) {
+        for (int o : options) {
+            if (o == v) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean in(float v, float[] options) {
+        for (float o : options) {
+            if (o == v) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static void randomSettingsPickFromTheirChoices() {
+        Map<String, Object> m = allRandom();
+        boolean ok = true;
+        for (int seed = 0; seed < 300; seed++) {
+            Config c = Config.fromMap(m, rng(seed));
+            ok &= c.theme != null && c.style != null;
+            ok &= c.lighting != Config.Lighting.AUTO;
+            ok &= in(c.fishCount, Config.FISH_COUNTS) && in(c.schools, Config.SCHOOL_LEVELS) && in(c.seaLifeAmount, Config.SEA_LIFE_LEVELS);
+            ok &= in(c.shimmer, Config.SHIMMER_LEVELS) && in(c.bubbles, Config.BUBBLE_LEVELS);
+            ok &= in(c.speed, Config.SPEEDS) && in(c.plantDensity, Config.PLANT_DENSITIES);
+        }
+        check("random settings stay on their own choices", ok);
+        Config a = Config.fromMap(m, new java.util.Random(42));
+        Config b = Config.fromMap(m, new java.util.Random(42));
+        check("same seed, same random picks", a.theme == b.theme && a.style == b.style && a.fishCount == b.fishCount && a.speed == b.speed);
+        Map<String, Object> lower = new HashMap<>();
+        lower.put(Config.THEME, " random ");
+        java.util.Set<Config.Theme> seen = java.util.EnumSet.noneOf(Config.Theme.class);
+        for (int seed = 0; seed < 200; seed++) {
+            seen.add(Config.fromMap(lower, rng(seed)).theme);
+        }
+        check("random is read in any case", seen.size() == Config.Theme.values().length);
+    }
+
+    static void randomReachesEveryChoice() {
+        Map<String, Object> m = allRandom();
+        java.util.Set<Object> themes = new java.util.HashSet<>();
+        java.util.Set<Object> styles = new java.util.HashSet<>();
+        java.util.Set<Object> lights = new java.util.HashSet<>();
+        java.util.Set<Object> fish = new java.util.HashSet<>();
+        java.util.Set<Object> schools = new java.util.HashSet<>();
+        java.util.Set<Object> amounts = new java.util.HashSet<>();
+        java.util.Set<Object> shimmer = new java.util.HashSet<>();
+        java.util.Set<Object> speeds = new java.util.HashSet<>();
+        java.util.Set<Object> plants = new java.util.HashSet<>();
+        java.util.Set<Object> bubbles = new java.util.HashSet<>();
+        java.util.Set<Object> specks = new java.util.HashSet<>();
+        for (int seed = 0; seed < 500; seed++) {
+            Config c = Config.fromMap(m, rng(seed));
+            themes.add(c.theme);
+            styles.add(c.style);
+            lights.add(c.lighting);
+            fish.add(c.fishCount);
+            schools.add(c.schools);
+            amounts.add(c.seaLifeAmount);
+            shimmer.add(c.shimmer);
+            speeds.add(c.speed);
+            plants.add(c.plantDensity);
+            bubbles.add(c.bubbles);
+            specks.add(c.particles);
+        }
+        check("random reaches every scene", themes.size() == Config.Theme.values().length);
+        check("random reaches every look", styles.size() == Config.Style.values().length);
+        check("random lighting is day, evening or night", lights.size() == 3 && !lights.contains(Config.Lighting.AUTO));
+        check("random reaches every fish count", fish.size() == Config.FISH_COUNTS.length);
+        check("random reaches every school level", schools.size() == Config.SCHOOL_LEVELS.length);
+        check("random reaches every sea life amount", amounts.size() == Config.SEA_LIFE_LEVELS.length);
+        check("random reaches every shimmer level", shimmer.size() == Config.SHIMMER_LEVELS.length);
+        check("random reaches every speed", speeds.size() == Config.SPEEDS.length);
+        check("random reaches every plant density", plants.size() == Config.PLANT_DENSITIES.length);
+        check("random reaches every bubble level", bubbles.size() == Config.BUBBLE_LEVELS.length);
+        check("random specks go both ways", specks.size() == 2);
+    }
+
+    static void surpriseRandomisesEverythingButDisplay() {
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.SURPRISE, Boolean.TRUE);
+        m.put(Config.THEME, "OCEAN");
+        m.put(Config.STYLE, "RETRO");
+        m.put(Config.BRIGHTNESS, "60");
+        m.put(Config.RESOLUTION, "1080");
+        m.put(Config.FPS, "30");
+        m.put(Config.CLOCK, Boolean.TRUE);
+        m.put(Config.SEA_LIFE, new java.util.HashSet<>(java.util.Arrays.asList("sharks")));
+        java.util.Set<Object> themes = new java.util.HashSet<>();
+        java.util.Set<Object> styles = new java.util.HashSet<>();
+        java.util.Set<Object> mixes = new java.util.HashSet<>();
+        boolean displayKept = true;
+        for (int seed = 0; seed < 200; seed++) {
+            Config c = Config.fromMap(m, rng(seed));
+            themes.add(c.theme);
+            styles.add(c.style);
+            mixes.add(c.seaLife);
+            displayKept &= Math.abs(c.brightness - 0.6f) < 1e-6 && c.resolution == 1080 && c.fps == 30 && c.clock;
+        }
+        check("surprise me overrides the chosen scene", themes.size() == Config.Theme.values().length);
+        check("surprise me overrides the chosen look", styles.size() == Config.Style.values().length);
+        check("surprise me mixes the sea life", mixes.size() > 10);
+        check("surprise me leaves brightness, resolution, frame rate and clock alone", displayKept);
+        Map<String, Object> asText = new HashMap<>();
+        asText.put(Config.SURPRISE, "true");
+        java.util.Set<Object> t = new java.util.HashSet<>();
+        for (int seed = 0; seed < 100; seed++) {
+            t.add(Config.fromMap(asText, rng(seed)).theme);
+        }
+        check("surprise me stored as text also works", t.size() > 1);
+    }
+
+    static void surpriseOffKeepsChoices() {
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.SURPRISE, Boolean.FALSE);
+        m.put(Config.THEME, "OCEAN");
+        m.put(Config.STYLE, "RANDOM");
+        boolean themeKept = true;
+        java.util.Set<Object> styles = new java.util.HashSet<>();
+        for (int seed = 0; seed < 200; seed++) {
+            Config c = Config.fromMap(m, rng(seed));
+            themeKept &= c.theme == Config.Theme.OCEAN && c.fishCount == 20 && c.lighting == Config.Lighting.DAY;
+            styles.add(c.style);
+        }
+        check("with surprise me off, fixed settings stay fixed", themeKept);
+        check("with surprise me off, a setting on Random still varies", styles.size() == Config.Style.values().length);
+        Config d = Config.fromMap(new HashMap<String, Object>(), new java.util.Random(1));
+        check("defaults are not random", d.theme == Config.Theme.REEF && d.style == Config.Style.REALISTIC && d.seaLife.size() == Species.GROUPS.length);
+    }
+
+    static void randomSeaLifeMix() {
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.SEA_LIFE, new java.util.HashSet<>(java.util.Arrays.asList("sharks", "RANDOM")));
+        java.util.Set<String> union = new java.util.HashSet<>();
+        boolean valid = true;
+        java.util.Set<Object> mixes = new java.util.HashSet<>();
+        for (int seed = 0; seed < 300; seed++) {
+            java.util.Set<String> s = Config.fromMap(m, rng(seed)).seaLife;
+            valid &= !s.isEmpty() && java.util.Arrays.asList(Species.GROUPS).containsAll(s) && !s.contains("RANDOM");
+            union.addAll(s);
+            mixes.add(s);
+        }
+        check("a random sea life mix is never empty and only real groups", valid);
+        check("a random sea life mix can include every group", union.size() == Species.GROUPS.length);
+        check("a random sea life mix changes between starts", mixes.size() > 20);
+        java.util.Random never = new java.util.Random() {
+            @Override
+            public boolean nextBoolean() {
+                return false;
+            }
+        };
+        check("a mix that drew nothing still gets one group", Config.randomMix(never).size() == 1);
+    }
+
+    static void specksParse() {
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.PARTICLES, "false");
+        check("specks off parsed", !Config.fromMap(m).particles);
+        m.put(Config.PARTICLES, "true");
+        check("specks on parsed", Config.fromMap(m).particles);
+        m.put(Config.PARTICLES, "sometimes");
+        check("specks garbage falls back to on", Config.fromMap(m).particles);
     }
 
     static void tintFollowsTheClock() {

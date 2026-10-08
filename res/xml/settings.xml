@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference android:key="preview" android:title="@string/preview" android:summary="@string/preview_summary" />
+    <SwitchPreference android:key="surprise" android:title="@string/surprise" android:summary="@string/surprise_summary"
+        android:defaultValue="false" android:disableDependentsState="true" />
     <PreferenceCategory android:title="@string/cat_scene">
-        <ListPreference android:key="theme" android:title="@string/theme" android:summary="%s"
+        <ListPreference android:key="theme" android:dependency="surprise" android:title="@string/theme" android:summary="%s"
             android:entries="@array/theme_names" android:entryValues="@array/theme_values" android:defaultValue="REEF" />
-        <ListPreference android:key="style" android:title="@string/style" android:summary="%s"
+        <ListPreference android:key="style" android:dependency="surprise" android:title="@string/style" android:summary="%s"
             android:entries="@array/style_names" android:entryValues="@array/style_values" android:defaultValue="REALISTIC" />
-        <ListPreference android:key="lighting" android:title="@string/lighting" android:summary="%s"
+        <ListPreference android:key="lighting" android:dependency="surprise" android:title="@string/lighting" android:summary="%s"
             android:entries="@array/lighting_names" android:entryValues="@array/lighting_values" android:defaultValue="DAY" />
-        <ListPreference android:key="plants" android:title="@string/plants" android:summary="%s"
+        <ListPreference android:key="plants" android:dependency="surprise" android:title="@string/plants" android:summary="%s"
             android:entries="@array/plant_names" android:entryValues="@array/plant_values" android:defaultValue="1.0" />
-        <ListPreference android:key="shimmer" android:title="@string/shimmer" android:summary="%s"
-            android:entries="@array/shimmer_names" android:entryValues="@array/level3_values" android:defaultValue="1" />
-        <ListPreference android:key="bubbles" android:title="@string/bubbles" android:summary="%s"
-            android:entries="@array/bubble_names" android:entryValues="@array/level3_values" android:defaultValue="2" />
-        <SwitchPreference android:key="particles" android:title="@string/particles" android:summary="@string/particles_summary"
-            android:defaultValue="true" />
+        <ListPreference android:key="shimmer" android:dependency="surprise" android:title="@string/shimmer" android:summary="%s"
+            android:entries="@array/shimmer_names" android:entryValues="@array/level3_random_values" android:defaultValue="1" />
+        <ListPreference android:key="bubbles" android:dependency="surprise" android:title="@string/bubbles" android:summary="%s"
+            android:entries="@array/bubble_names" android:entryValues="@array/level3_random_values" android:defaultValue="2" />
+        <ListPreference android:key="specks" android:dependency="surprise" android:title="@string/particles" android:summary="%s"
+            android:entries="@array/speck_names" android:entryValues="@array/speck_values" android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/cat_fish">
-        <ListPreference android:key="fish_count" android:title="@string/fish_count" android:summary="%s"
+        <ListPreference android:key="fish_count" android:dependency="surprise" android:title="@string/fish_count" android:summary="%s"
             android:entries="@array/fish_names" android:entryValues="@array/fish_values" android:defaultValue="20" />
-        <ListPreference android:key="schools" android:title="@string/schools" android:summary="%s"
-            android:entries="@array/school_names" android:entryValues="@array/level4_values" android:defaultValue="2" />
-        <ListPreference android:key="speed" android:title="@string/speed" android:summary="%s"
+        <ListPreference android:key="schools" android:dependency="surprise" android:title="@string/schools" android:summary="%s"
+            android:entries="@array/school_names" android:entryValues="@array/level4_random_values" android:defaultValue="2" />
+        <ListPreference android:key="speed" android:dependency="surprise" android:title="@string/speed" android:summary="%s"
             android:entries="@array/speed_names" android:entryValues="@array/speed_values" android:defaultValue="1.0" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/cat_sea_life">
-        <MultiSelectListPreference android:key="sea_life" android:title="@string/sea_life" android:summary="@string/sea_life_summary"
+        <MultiSelectListPreference android:key="sea_life" android:dependency="surprise" android:title="@string/sea_life" android:summary="@string/sea_life_summary"
             android:entries="@array/sea_life_names" android:entryValues="@array/sea_life_values" android:defaultValue="@array/sea_life_values" />
-        <ListPreference android:key="sea_life_amount" android:title="@string/sea_life_amount" android:summary="%s"
-            android:entries="@array/amount_names" android:entryValues="@array/level4_values" android:defaultValue="2" />
+        <ListPreference android:key="sea_life_amount" android:dependency="surprise" android:title="@string/sea_life_amount" android:summary="%s"
+            android:entries="@array/amount_names" android:entryValues="@array/level4_random_values" android:defaultValue="2" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/cat_display">
         <ListPreference android:key="brightness" android:title="@string/brightness" android:summary="%s"

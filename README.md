@@ -6,7 +6,7 @@
     </picture>
 </p>
 
-<p align="center">A living aquarium screensaver for Fire TV. Every fish, plant and coral is drawn by the app in real time: no video, no downloads, no ads, and no tracking or analytics of any kind.</p>
+<p align="center">A living aquarium screensaver for Fire TV, Android TV and Google TV. Every fish, plant and coral is drawn by the app in real time: no video, no downloads, no ads, and no tracking or analytics of any kind.</p>
 
 <p align="center">
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-    <img src="docs/screenshots/coral-reef-realistic.jpg" alt="Coral reef scene running as the Fire TV screensaver" width="800">
+    <img src="docs/screenshots/coral-reef-realistic.jpg" alt="Coral reef scene running as the TV screensaver" width="800">
 </p>
 
 ## Table of Contents
@@ -33,6 +33,7 @@
 - [Day and night](#day-and-night)
 - [Settings](#settings)
 - [Privacy](#privacy)
+- [TV support](#tv-support)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Setting it as the screensaver](#setting-it-as-the-screensaver)
@@ -50,6 +51,7 @@
 - Fish counts from a few to a ton, plus schools that swim together and scatter around sharks and dolphins.
 - Sunlight shimmer: shafts of light from the surface and rippling light on the sand.
 - Day, evening and night lighting, or lighting that follows the clock.
+- Random choices for every scene, look and content setting, or **Surprise me** to randomize them all each time it starts.
 - An optional clock that drifts around the screen so it never sits in one spot.
 - No permissions, no network access, no ads, no analytics.
 
@@ -102,7 +104,7 @@ Whales don't stay: one swims through every so often, far in the background, then
 
 ## Settings
 
-Open **Aquarium Live** from your apps on the Fire TV, or run `adb shell am start -n com.jeremykenedy.aquariumlive/.SettingsActivity`. Every setting applies the next time the screensaver starts; **Preview** shows it straight away.
+Open **Aquarium Live** from the apps on your TV, or run `adb shell am start -n com.jeremykenedy.aquariumlive/.SettingsActivity`. Every setting applies the next time the screensaver starts; **Preview** shows it straight away.
 
 <p align="center">
     <img src="docs/screenshots/settings.png" alt="Aquarium Live settings screen" width="640">
@@ -110,22 +112,29 @@ Open **Aquarium Live** from your apps on the Fire TV, or run `adb shell am start
 
 | Setting | Choices | Default |
 |---------|---------|---------|
-| Scene | Open ocean, Coral reef, Kelp forest, Fish tank | Coral reef |
-| Style | Realistic, Animated, Cartoon, 3D movie, Hand-painted classic, Retro screensaver | Realistic |
-| Day or night | Day (bright), Evening (warm), Night (dim), Follow the clock | Day (bright) |
-| Plants and coral | Sparse, Normal, Lush | Normal |
-| Sunlight shimmer | Off, Soft, Bright | Soft |
-| Bubbles | Off, Airstone, Airstone and fish bubbles | Airstone and fish bubbles |
-| Floating specks | On, Off | On |
-| Fish | A few (6), A handful (12), A bunch (20), A lot (30), A ton (45) | A bunch |
-| Schools | None, One school, A few schools, Huge schools | A few schools |
-| Swimming speed | Calm, Normal, Lively | Normal |
-| Which sea life | Sharks, Whales, Dolphins, Manta rays, Sea turtles, Octopuses, Jellyfish, Seahorses, Crabs and starfish | All |
-| How much sea life | None, A little, Some, Lots | Some |
+| Surprise me | On, Off | Off |
+| Scene | Open ocean, Coral reef, Kelp forest, Fish tank, Random | Coral reef |
+| Style | Realistic, Animated, Cartoon, 3D movie, Hand-painted classic, Retro screensaver, Random | Realistic |
+| Day or night | Day (bright), Evening (warm), Night (dim), Follow the clock, Random | Day (bright) |
+| Plants and coral | Sparse, Normal, Lush, Random | Normal |
+| Sunlight shimmer | Off, Soft, Bright, Random | Soft |
+| Bubbles | Off, Airstone, Airstone and fish bubbles, Random | Airstone and fish bubbles |
+| Floating specks | On, Off, Random | On |
+| Fish | A few (6), A handful (12), A bunch (20), A lot (30), A ton (45), Random | A bunch |
+| Schools | None, One school, A few schools, Huge schools, Random | A few schools |
+| Swimming speed | Calm, Normal, Lively, Random | Normal |
+| Which sea life | Sharks, Whales, Dolphins, Manta rays, Sea turtles, Octopuses, Jellyfish, Seahorses, Crabs and starfish, A random mix each time | All except the random mix |
+| How much sea life | None, A little, Some, Lots, Random | Some |
 | Brightness | Full, 80%, 60%, 40% | Full |
 | Resolution | Automatic (recommended), 4K (2160p), 1440p, 1080p | Automatic |
 | Frame rate | Automatic (recommended), 60, 30 | Automatic |
 | Show the time | On, Off | Off |
+
+### Random
+
+Every scene, look and content setting has a **Random** choice, picked again each time the screensaver starts. Set just the ones you want to change from night to night and keep the rest fixed: for example a fixed coral reef with a random look, or a fixed look with a random scene. **Random** lighting picks day, evening or night. **A random mix each time** under Which sea life gives every group an even chance of showing up, and always at least one.
+
+**Surprise me** randomizes all of them at once, without changing their saved choices: while it is on they are greyed out, and turning it off brings them back as they were. Brightness, resolution, frame rate and the clock are never randomized, so the screensaver never surprises you with a brighter screen or a slower frame rate.
 
 Schools come on top of the fish count: one school is 14 fish, a few schools are 14 and 18, and huge schools are 28, 26 and 24. Each scene only shows the sea life that lives there.
 
@@ -141,9 +150,22 @@ aapt dump permissions aquarium-live.apk
 
 The output lists the package name and no `uses-permission` lines. The CI build fails if a permission ever appears.
 
-## Requirements
+## TV support
 
-- A Fire TV with Developer Mode and ADB debugging turned on. The steps, with screenshots, are in [Putting your Fire TV in developer mode](https://github.com/jeremykenedy/amazon-fire-tv-fixes#putting-your-fire-tv-in-developer-mode).
+The same APK works on Fire TV, Android TV and Google TV. It uses only the Android framework, has a TV launcher entry, and is a standard Android screensaver (a `DreamService`), so it needs Android 5.1 (API 22) or newer and OpenGL ES 2.0, and nothing from Amazon or Google.
+
+Tested on:
+
+| Device | Android | Checked |
+|--------|---------|---------|
+| Fire TV Edition TV (AFTDEC012E) | 11 (API 30) | Settings, preview, every scene and look, screensaver started and woken from the remote |
+| Google TV emulator | 14 (API 34) | Install, launcher entry, settings with the remote, Surprise me and Random, preview, screensaver started on its own after the idle timeout |
+| Android TV emulator | 12 (API 31) | Install, launcher entry, screensaver started on its own after the idle timeout |
+
+Physical Android TV and Google TV devices have not been tested yet.
+
+
+- A Fire TV, Android TV or Google TV with ADB debugging turned on in its developer options. For a Fire TV, the steps with screenshots are in [Putting your Fire TV in developer mode](https://github.com/jeremykenedy/amazon-fire-tv-fixes#putting-your-fire-tv-in-developer-mode).
 - [adb](https://developer.android.com/tools/adb) on a computer on the same network
 - To build from source: a JDK (CI runs 17 and 21) and the Android SDK build tools
 
@@ -165,13 +187,19 @@ The output lists the package name and no `uses-permission` lines. The CI build f
 
 ## Setting it as the screensaver
 
-Set it as the screensaver over adb:
+First note the screensaver the TV uses now, so you can put it back later:
+
+```bash
+adb shell settings get secure screensaver_components
+```
+
+Then set Aquarium Live as the screensaver over adb. This works the same way on Fire TV, Android TV and Google TV:
 
 ```bash
 adb shell settings put secure screensaver_components com.jeremykenedy.aquariumlive/.AquariumDream
 ```
 
-To see it right away instead of waiting for the TV to go idle:
+On a Fire TV, to see it right away instead of waiting for the TV to go idle:
 
 ```bash
 adb shell am start -n com.android.systemui/.Somnambulator
@@ -205,12 +233,20 @@ Runs the plain-JVM tests for the simulation, the settings parsing and the shadin
 
 ## Uninstalling
 
-Put the stock screensaver back first, then remove the app:
+Put the screensaver you noted during setup back first, then remove the app:
 
 ```bash
-adb shell settings put secure screensaver_components com.amazon.ftv.screensaver/.app.services.ScreensaverService
+adb shell settings put secure screensaver_components <the value you noted>
 adb uninstall com.jeremykenedy.aquariumlive
 ```
+
+The stock values on the devices this was tested on:
+
+| Device | Stock screensaver |
+|--------|-------------------|
+| Fire TV | `com.amazon.ftv.screensaver/.app.services.ScreensaverService` |
+| Google TV 14 emulator | `com.google.android.apps.tv.dreamx/.service.Backdrop` |
+| Android TV 12 emulator | `com.google.android.backdrop/.Backdrop` |
 
 ## License
 
