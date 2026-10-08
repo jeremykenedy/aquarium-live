@@ -31,7 +31,9 @@ def check_links(problems):
     for path in documents:
         text = without_code(path.read_text())
         targets = re.findall(r"\]\(([^\s)]+)\)", text)
-        targets += re.findall(r'(?:src|href|srcset)="([^"]+)"', text)
+        targets += re.findall(r'(?:src|href)="([^"]+)"', text)
+        for srcset in re.findall(r'srcset="([^"]+)"', text):
+            targets += [candidate.split()[0] for candidate in srcset.split(",") if candidate.strip()]
         for target in targets:
             if target.startswith(("https:", "http:", "mailto:")):
                 continue

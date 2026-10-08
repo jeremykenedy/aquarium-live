@@ -57,7 +57,7 @@ Because the choice is made once per start, a random scene stays the same until t
 `Sim` holds every creature and plant and moves them each frame. The tank is 1080 world units tall and as wide as the screen's shape requires. `y` points up, and `z` runs from the front glass (0) to the back wall (1); things further back are drawn smaller and hazier.
 
 - Fish wander, rest and turn around, and stay inside the tank.
-- Schools hold together and move as one.
+- Schools hold together and move as one. With Kinds in a school on Mixed kinds, each member is drawn from every fish that lives in the scene; the school keeps its lead species' pace and spreads out to fit its biggest member.
 - Small fish keep clear of sharks and dolphins.
 - Crabs and starfish stay on the floor, octopuses crawl and sometimes swim, seahorses hover near plants, and jellyfish drift and pulse.
 - Whales visit: one swims through far in the background every so often, then leaves.

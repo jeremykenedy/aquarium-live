@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Documentation
+
+- The README follows the new layout: features, what it does, a screenshots section with every screen, platform support, requirements and required packages, integrations, upgrading, a configuration summary that links to the full guide, a file tree, and links to every guide.
+- Screenshots show one per row on phones, two on tablets and three on desktops, and open full size when selected. New screenshots of every settings screen, the choice dialogs, Surprise me, mixed schools and the clock.
+- Issue templates for bug reports, feature requests and TV compatibility reports.
+
 ## 1.0.3
 
 ### Added

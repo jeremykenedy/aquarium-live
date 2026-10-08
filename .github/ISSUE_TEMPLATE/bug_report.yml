@@ -1,0 +1,60 @@
+name: Bug report
+description: Something does not work or looks wrong.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [Troubleshooting](https://github.com/jeremykenedy/aquarium-live/blob/main/docs/TROUBLESHOOTING.md) first. Many problems, such as the screensaver never starting, are covered there.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected to see instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The settings you chose and what you did, one step per line.
+      placeholder: |
+        1. Scene: Coral reef, Style: Cartoon
+        2. Open Preview
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Aquarium Live version
+      description: "From `adb shell dumpsys package com.jeremykenedy.aquariumlive | grep versionName`"
+      placeholder: "1.0.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Fire TV
+        - Google TV
+        - Android TV
+        - Other Android device
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device model and Android version
+      description: "From `adb shell getprop ro.product.model` and `adb shell getprop ro.build.version.release`"
+      placeholder: "AFTDEC012E, Android 11"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Screenshot or log
+      description: "A screenshot (`adb exec-out screencap -p > screen.png`) or the output of `adb logcat -d | grep -i aquarium`, if you have one."
+      render: text

@@ -60,7 +60,7 @@ The other classes call Android: the painting (`FishArt`, `CreatureArt`, `PlantAr
 | Device | Android | Checked |
 |--------|---------|---------|
 | Fire TV Edition TV (AFTDEC012E) | 11 (API 30) | Settings, preview, every scene and look, the real screensaver started and woken from the remote, frame rate |
-| Google TV emulator | 14 (API 34) | Install, launcher entry, settings with the remote, Surprise me and Random, preview, screensaver started on its own after the idle timeout |
+| Google TV emulator | 14 (API 34) | Install, launcher entry, settings with the remote, Surprise me and Random, Kinds in a school with mixed schools in preview, preview, screensaver started on its own after the idle timeout |
 | Android TV emulator | 12 (API 31) | Install, launcher entry, screensaver started on its own after the idle timeout |
 | Android emulator | 5.1.1 (API 22) | Install, settings, preview at a fixed 1080p resolution, screensaver started |
 

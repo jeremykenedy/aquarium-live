@@ -14,6 +14,7 @@ Settings apply the next time the screensaver starts. **Preview** at the top of t
 - [Sea life](#sea-life)
 - [Display](#display)
 - [Recipes](#recipes)
+- [Screenshots](#screenshots)
 
 ## Surprise me and Random
 
@@ -98,3 +99,20 @@ Whales do not stay: one swims through every so often, far in the background, the
 - **Calm tank:** Scene Fish tank, Swimming speed Calm, Schools One school.
 - **Big ocean:** Scene Open ocean, How much sea life Lots, Schools Huge schools.
 - **Old desktop screensaver:** Style Retro screensaver, Scene Fish tank.
+
+## Screenshots
+
+Captured on the Google TV 14 emulator. Select any screenshot to open it full size.
+
+<p align="center">
+    <a href="screenshots/settings-top.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/settings-top-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/settings-top-tablet.jpg 2x"><img src="screenshots/settings-top.jpg" alt="Settings: Preview, Surprise me and the scene" title="Settings: Preview, Surprise me and the scene"></picture></a>
+    <a href="screenshots/settings-scene.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/settings-scene-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/settings-scene-tablet.jpg 2x"><img src="screenshots/settings-scene.jpg" alt="Settings: style, lighting, plants, shimmer, bubbles and specks" title="Settings: style, lighting, plants, shimmer, bubbles and specks"></picture></a>
+    <a href="screenshots/settings-fish.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/settings-fish-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/settings-fish-tablet.jpg 2x"><img src="screenshots/settings-fish.jpg" alt="Settings: fish, schools, kinds in a school and swimming speed" title="Settings: fish, schools, kinds in a school and swimming speed"></picture></a>
+    <a href="screenshots/settings-display.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/settings-display-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/settings-display-tablet.jpg 2x"><img src="screenshots/settings-display.jpg" alt="Settings: sea life, brightness, resolution, frame rate and the clock" title="Settings: sea life, brightness, resolution, frame rate and the clock"></picture></a>
+    <a href="screenshots/choice-scene.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/choice-scene-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/choice-scene-tablet.jpg 2x"><img src="screenshots/choice-scene.jpg" alt="Choosing a scene, with Random" title="Choosing a scene, with Random"></picture></a>
+    <a href="screenshots/choice-style.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/choice-style-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/choice-style-tablet.jpg 2x"><img src="screenshots/choice-style.jpg" alt="Choosing a look, with Random" title="Choosing a look, with Random"></picture></a>
+    <a href="screenshots/choice-sea-life.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/choice-sea-life-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/choice-sea-life-tablet.jpg 2x"><img src="screenshots/choice-sea-life.jpg" alt="Choosing which sea life can appear" title="Choosing which sea life can appear"></picture></a>
+    <a href="screenshots/surprise-me.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/surprise-me-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/surprise-me-tablet.jpg 2x"><img src="screenshots/surprise-me.jpg" alt="Surprise me on, with the settings it chooses greyed out" title="Surprise me on, with the settings it chooses greyed out"></picture></a>
+    <a href="screenshots/mixed-schools.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/mixed-schools-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/mixed-schools-tablet.jpg 2x"><img src="screenshots/mixed-schools.jpg" alt="Mixed kinds of fish swimming together in schools" title="Mixed kinds of fish swimming together in schools"></picture></a>
+    <a href="screenshots/clock.jpg"><picture><source media="(min-width: 1280px)" srcset="screenshots/grid/clock-desktop.jpg 2x"><source media="(min-width: 600px)" srcset="screenshots/grid/clock-tablet.jpg 2x"><img src="screenshots/clock.jpg" alt="Kelp forest with the clock shown" title="Kelp forest with the clock shown"></picture></a>
+</p>

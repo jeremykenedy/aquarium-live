@@ -8,7 +8,7 @@ Aquarium Live is installed with `adb` from a computer on the same network as the
 - [3. Connect and install](#3-connect-and-install)
 - [4. Set it as the screensaver](#4-set-it-as-the-screensaver)
 - [5. Try it](#5-try-it)
-- [Updating](#updating)
+- [Upgrading](#upgrading)
 - [Uninstalling](#uninstalling)
 
 ## What you need
@@ -85,7 +85,7 @@ adb shell am start -n com.android.systemui/.Somnambulator
 
 This worked on the Fire TV and on Android 5.1. On the Google TV 14 emulator it did not start the screensaver; there it started on its own once the TV had been idle for its screensaver timeout. Press any button on the remote to wake the TV.
 
-## Updating
+## Upgrading
 
 Download the new release, check its checksum, then install over the old one:
 
@@ -93,7 +93,7 @@ Download the new release, check its checksum, then install over the old one:
 adb install -r aquarium-live.apk
 ```
 
-Your settings are kept. The first start after an update repaints the art, because the saved art is tied to the installed version, so it takes a few seconds longer than usual.
+Your settings are kept, and settings added in the new version start at their defaults. The first start after an update repaints the art, because the saved art is tied to the installed version, so it takes a few seconds longer than usual.
 
 ## Uninstalling
 

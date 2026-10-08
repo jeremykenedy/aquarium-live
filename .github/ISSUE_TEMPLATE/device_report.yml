@@ -1,0 +1,51 @@
+name: TV compatibility report
+description: Tell us how Aquarium Live runs on your TV, good or bad.
+title: "[Device]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports from real TVs help fill in the [platform support](https://github.com/jeremykenedy/aquarium-live#platform-support) table.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Fire TV
+        - Google TV
+        - Android TV
+        - Other Android device
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device model and Android version
+      description: "From `adb shell getprop ro.product.model` and `adb shell getprop ro.build.version.release`"
+      placeholder: "AFTDEC012E, Android 11"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Aquarium Live version
+      placeholder: "1.0.3"
+    validations:
+      required: true
+  - type: checkboxes
+    id: works
+    attributes:
+      label: What works
+      options:
+        - label: It installs
+        - label: It appears with the other apps
+        - label: The settings screen opens and the remote can change settings
+        - label: Preview shows the aquarium
+        - label: The screensaver starts on its own when the TV is idle
+        - label: Motion is smooth
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Anything that did not work, and how you set the screensaver.
