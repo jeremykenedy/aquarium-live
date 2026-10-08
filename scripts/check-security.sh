@@ -48,7 +48,7 @@ if [[ "$actual" != "$digest" ]]; then
 fi
 tar -xzf "$TOOLS/$archive" -C "$TOOLS" gitleaks
 "$TOOLS/gitleaks" git --redact --no-banner . || fail "secrets found in the git history"
-"$TOOLS/gitleaks" dir --redact --no-banner . || fail "secrets found in the files"
+"$TOOLS/gitleaks" dir --redact --no-banner --config .gitleaks.toml . || fail "secrets found in the files"
 
 if [[ "$failed" != 0 ]]; then
   exit 1

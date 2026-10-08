@@ -19,6 +19,8 @@
     <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/sonarcloud.yml/badge.svg" alt="SonarQube Cloud scan"></a>
     <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=alert_status" alt="Quality Gate Status"></a>
     <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=coverage" alt="Coverage"></a>
+    <a href="https://www.codefactor.io/repository/github/jeremykenedy/aquarium-live"><img src="https://www.codefactor.io/repository/github/jeremykenedy/aquarium-live/badge" alt="CodeFactor"></a>
+    <a href="https://app.codacy.com/gh/jeremykenedy/aquarium-live/dashboard"><img src="https://app.codacy.com/project/badge/Grade/7f53f465f89b4a3997e89b8883cc95ae" alt="Codacy Badge"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 

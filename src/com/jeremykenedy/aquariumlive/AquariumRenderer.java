@@ -23,7 +23,6 @@ import javax.microedition.khronos.opengles.GL10;
  * GL driver's per-call cost from dominating on a TV's small CPU.
  */
 final class AquariumRenderer implements GLSurfaceView.Renderer {
-
     /** Per-instance inputs: iA x, y, cos, sin. iB width, height, sway, sway phase. iC uv repeat, origin y, glow, alpha. iD r, g, b, fog. */
     private static final String SPRITE_VS =
             "attribute vec2 aPos; attribute vec2 aUv;\n"
@@ -175,6 +174,70 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
             + RAYS_FN
             + "void main() { gl_FragColor = vec4(rays(vec2(vUv.x * uAspect, vUv.y)) * 0.35 * vec3(0.8, 0.92, 1.0) * uTint, 0.0); }\n";
 
+    private float causticScale = 1f;
+    private float causticSpeed = 1f;
+    private float rayScale = 1f;
+    private boolean nearest;
+
+    private static final int FLOATS_PER_INSTANCE = 16;
+    private static final int MAX_INSTANCES = 512;
+    private static final int RAY_TEXELS = 512;
+    private static final float RAYS_FROM = -0.25f;
+
+    private final Config cfg;
+    private final Look look;
+    private final boolean instancing;
+    private Sim sim;
+    private float worldW;
+    private int surfaceH;
+
+    private Prog sprite;
+    private Prog body;
+    private Prog floor;
+    private Prog bg;
+    private Prog points;
+    private Prog shafts;
+    private Prog current;
+    private Gl.Mesh spriteMesh;
+    private Gl.Mesh bodyMesh;
+    private Gl.Mesh screenMesh;
+    private final Map<String, Integer> textures = new HashMap<>();
+    private final Map<Object, String> keyFor = new HashMap<>();
+    private final Map<String, BitmapSource> sources = new HashMap<>();
+    private final Map<String, java.util.concurrent.Future<android.graphics.Bitmap>> pending = new HashMap<>();
+    private final Map<String, Double> bornAt = new HashMap<>();
+    private final java.io.File cacheDir;
+    private final String cachePrefix;
+    private java.util.concurrent.ExecutorService pool;
+    private int causticTex;
+    private int rayTex;
+    private final ByteBuffer rayBytes = ByteBuffer.allocateDirect(RAY_TEXELS);
+    private int boundTex = -1;
+    private int instanceVbo;
+
+    private final float[] inst = new float[FLOATS_PER_INSTANCE * MAX_INSTANCES];
+    private final FloatBuffer instBuffer = Gl.floats(new float[FLOATS_PER_INSTANCE * MAX_INSTANCES]);
+    private int instCount;
+    private Prog batchProg;
+    private int batchTex;
+
+    private final List<Object> drawList = new ArrayList<>();
+    private float[] pointData = new float[0];
+    private FloatBuffer pointBuffer;
+
+    private final FramePacer pacer;
+    private long lastNanos;
+    private double time;
+    private float fade;
+    private float[] tint = {1f, 1f, 1f};
+    private final float[] lightTint = new float[3];
+    private float tintTimer;
+    private final float[] cOff = new float[4];
+    private final float[] spot = new float[2];
+
+    private static final float[] OCTO_BACK = {-1.25f, -0.8f, 0.8f, 1.25f};
+    private static final float[] OCTO_FRONT = {-1.0f, -0.35f, 0.35f, 1.0f};
+
     private static final class Look {
         float[] top;
         float[] mid;
@@ -218,14 +281,9 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         return l;
     }
 
-    private float fogScale = 1f;
-    private float causticScale = 1f;
-    private float causticSpeed = 1f;
-    private float rayScale = 1f;
-    private boolean nearest;
-
     /** Water colour, haze and sunlight for the chosen look. */
     private void styleScene() {
+        float fogScale = 1f;
         switch (cfg.style) {
             case ANIMATED:
                 brighten(look.top, 1.1f);
@@ -327,62 +385,6 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
             uFrom = GLES20.glGetUniformLocation(id, "uFrom");
         }
     }
-
-    private static final int FLOATS_PER_INSTANCE = 16;
-    private static final int MAX_INSTANCES = 512;
-    private static final int RAY_TEXELS = 512;
-    private static final float RAYS_FROM = -0.25f;
-
-    private final Config cfg;
-    private final Look look;
-    private final boolean instancing;
-    private Sim sim;
-    private float worldW;
-    private int surfaceH;
-
-    private Prog sprite;
-    private Prog body;
-    private Prog floor;
-    private Prog bg;
-    private Prog points;
-    private Prog shafts;
-    private Prog current;
-    private Gl.Mesh spriteMesh;
-    private Gl.Mesh bodyMesh;
-    private Gl.Mesh screenMesh;
-    private final Map<String, Integer> textures = new HashMap<>();
-    private final Map<Object, String> keyFor = new HashMap<>();
-    private final Map<String, BitmapSource> sources = new HashMap<>();
-    private final Map<String, java.util.concurrent.Future<android.graphics.Bitmap>> pending = new HashMap<>();
-    private final Map<String, Double> bornAt = new HashMap<>();
-    private final java.io.File cacheDir;
-    private final String cachePrefix;
-    private java.util.concurrent.ExecutorService pool;
-    private int causticTex;
-    private int rayTex;
-    private final ByteBuffer rayBytes = ByteBuffer.allocateDirect(RAY_TEXELS);
-    private int boundTex = -1;
-    private int instanceVbo;
-
-    private final float[] inst = new float[FLOATS_PER_INSTANCE * MAX_INSTANCES];
-    private final FloatBuffer instBuffer = Gl.floats(new float[FLOATS_PER_INSTANCE * MAX_INSTANCES]);
-    private int instCount;
-    private Prog batchProg;
-    private int batchTex;
-
-    private final List<Object> drawList = new ArrayList<>();
-    private float[] pointData = new float[0];
-    private FloatBuffer pointBuffer;
-
-    private final FramePacer pacer;
-    private long lastNanos;
-    private double time;
-    private float fade;
-    private float[] tint = {1f, 1f, 1f};
-    private final float[] lightTint = new float[3];
-    private float tintTimer;
-    private final float[] cOff = new float[4];
-    private final float[] spot = new float[2];
 
     AquariumRenderer(Config cfg, boolean instancing, java.io.File cacheDir, String cachePrefix) {
         this.cfg = cfg;
@@ -1011,9 +1013,6 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         local(c, CreatureArt.TURTLE_FRONT[0], CreatureArt.TURTLE_FRONT[1], len, hgt);
         sprite(flipper, spot[0], spot[1], tilt + side * front, len * 0.14f * side * squash, len * 0.5f, 0f, 0f, 0f, lightUp, fade, shade, shade, shade, fog);
     }
-
-    private static final float[] OCTO_BACK = {-1.25f, -0.8f, 0.8f, 1.25f};
-    private static final float[] OCTO_FRONT = {-1.0f, -0.35f, 0.35f, 1.0f};
 
     private void drawOctopus(Sim.Creature c, float sc, float shade, float fog, float lightUp, float fade) {
         Species s = c.species;

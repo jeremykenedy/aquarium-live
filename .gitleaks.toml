@@ -1,0 +1,11 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated local build output and binary images"
+paths = [
+  '''(^|/)build/''',
+  '''(^|/)\.git/''',
+  '''\.png$''',
+  '''\.jpg$''',
+]

@@ -13,6 +13,9 @@ Six GitHub Actions workflows run on every push to `main` and every pull request.
 
 Every action is pinned to a full commit SHA, with the version in a comment.
 
+[Codacy](https://app.codacy.com/gh/jeremykenedy/aquarium-live/dashboard) analyzes every push. `.codacy.yaml` leaves out generated and binary files (`build/`, `res/`, `art/`, `docs/screenshots/`), and `.markdownlint.json` allows the HTML the README uses for its banner, badges and screenshots.
+
+
 
 ## Secrets
 

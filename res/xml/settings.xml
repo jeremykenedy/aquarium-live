@@ -29,7 +29,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/cat_sea_life">
         <MultiSelectListPreference android:key="sea_life" android:dependency="surprise" android:title="@string/sea_life" android:summary="@string/sea_life_summary"
-            android:entries="@array/sea_life_names" android:entryValues="@array/sea_life_values" android:defaultValue="@array/sea_life_values" />
+            android:entries="@array/sea_life_names" android:entryValues="@array/sea_life_values" android:defaultValue="@array/sea_life_default" />
         <ListPreference android:key="sea_life_amount" android:dependency="surprise" android:title="@string/sea_life_amount" android:summary="%s"
             android:entries="@array/amount_names" android:entryValues="@array/level4_random_values" android:defaultValue="2" />
     </PreferenceCategory>

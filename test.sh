@@ -6,4 +6,4 @@ OUT="$(mktemp -d)"
 trap 'rm -rf "$OUT"' EXIT
 PKG=com/jeremykenedy/aquariumlive
 javac -nowarn -d "$OUT" "$HERE/src/$PKG/Config.java" "$HERE/src/$PKG/Species.java" "$HERE/src/$PKG/Sim.java" "$HERE/src/$PKG/Tone.java" "$HERE/src/$PKG/ArtCache.java" "$HERE/src/$PKG/FramePacer.java" "$HERE/test/$PKG/SimTest.java"
-java -cp "$OUT" com.jeremykenedy.aquariumlive.SimTest
+java -Dres.dir="$HERE/res" -cp "$OUT" com.jeremykenedy.aquariumlive.SimTest

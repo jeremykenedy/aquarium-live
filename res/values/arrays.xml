@@ -151,6 +151,17 @@
         <item>Crabs and starfish</item>
         <item>A random mix each time</item>
     </string-array>
+    <string-array name="sea_life_default">
+        <item>sharks</item>
+        <item>whales</item>
+        <item>dolphins</item>
+        <item>rays</item>
+        <item>turtles</item>
+        <item>octopuses</item>
+        <item>jellyfish</item>
+        <item>seahorses</item>
+        <item>crabs</item>
+    </string-array>
     <string-array name="sea_life_values">
         <item>sharks</item>
         <item>whales</item>

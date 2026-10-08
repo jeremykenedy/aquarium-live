@@ -12,22 +12,23 @@ final class Tone {
      * edge the two bands blend so the edge stays smooth.
      */
     static float snap(float lum, float[] levels, float soft) {
-        for (int i = 0; i < levels.length; i++) {
-            if (lum > levels[i] && i < levels.length - 1) {
-                continue;
-            }
-            float value = bandValue(levels, i, lum);
-            if (i + 1 < levels.length && levels[i] - lum < soft) {
-                float t = 1f - (levels[i] - lum) / soft;
-                value += (bandValue(levels, i + 1, lum) - value) * t * 0.5f;
-            }
-            if (i > 0 && lum - levels[i - 1] < soft) {
-                float t = 1f - (lum - levels[i - 1]) / soft;
-                value += (bandValue(levels, i - 1, lum) - value) * t * 0.5f;
-            }
-            return value;
+        if (levels.length == 0) {
+            return lum;
         }
-        return lum;
+        int i = 0;
+        while (i < levels.length - 1 && lum > levels[i]) {
+            i++;
+        }
+        float value = bandValue(levels, i, lum);
+        if (i + 1 < levels.length && levels[i] - lum < soft) {
+            float t = 1f - (levels[i] - lum) / soft;
+            value += (bandValue(levels, i + 1, lum) - value) * t * 0.5f;
+        }
+        if (i > 0 && lum - levels[i - 1] < soft) {
+            float t = 1f - (lum - levels[i - 1]) / soft;
+            value += (bandValue(levels, i - 1, lum) - value) * t * 0.5f;
+        }
+        return value;
     }
 
     private static float bandValue(float[] levels, int i, float lum) {

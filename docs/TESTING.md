@@ -17,6 +17,7 @@ The tests run on a plain JVM, with no Android device or emulator. They cover the
 | Area | What is checked |
 |------|-----------------|
 | Settings | Defaults; every stored value parses; bad values (unknown names, out-of-range numbers, NaN, wrong types) fall back to the defaults |
+| Settings screen | Every list setting has a name for each choice, defaults to one of its own choices and never to Random; Which sea life defaults to every group. Reads the real `res/xml/settings.xml` and `res/values/arrays.xml` |
 | Random and Surprise me | Random only picks from each setting's own choices and reaches every one of them; Random lighting never picks Follow the clock; Surprise me overrides the saved choices and leaves Brightness, Resolution, Frame rate and the clock alone; with Surprise me off, fixed settings stay fixed; a random sea-life mix is never empty; the same seed gives the same picks |
 | Lighting | Follow the clock gives day, evening and night at the right hours |
 | Tank contents | Fish counts and schools match the settings for every scene; each scene only has its own species; sea-life toggles and amounts are respected; no schools when Schools is None |

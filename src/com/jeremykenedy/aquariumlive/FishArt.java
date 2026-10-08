@@ -20,7 +20,6 @@ import java.util.Random;
  * centre, negative up.
  */
 final class FishArt {
-
     static final int FORKED = 0;
     static final int ROUNDED = 1;
     static final int LUNATE = 2;
@@ -28,6 +27,18 @@ final class FishArt {
     static final int FLOWING = 4;
     static final int HETERO = 5;
     static final int FLUKE = 6;
+
+    final int texW;
+    final int texH;
+    final float cy;
+    final Canvas c;
+    final Bitmap bitmap;
+    final Look k;
+    final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Path body;
+    Path all;
+
+    private Config.Style style = Config.Style.REALISTIC;
 
     interface Painter {
         void paint(FishArt a);
@@ -88,16 +99,6 @@ final class FishArt {
         Painter extras;
     }
 
-    final int texW;
-    final int texH;
-    final float cy;
-    final Canvas c;
-    final Bitmap bitmap;
-    final Look k;
-    final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Path body;
-    Path all;
-
     private FishArt(int texW, int texH, Look look) {
         this.texW = texW;
         this.texH = texH;
@@ -106,8 +107,6 @@ final class FishArt {
         this.bitmap = Bitmap.createBitmap(texW, texH, Bitmap.Config.ARGB_8888);
         this.c = new Canvas(bitmap);
     }
-
-    private Config.Style style = Config.Style.REALISTIC;
 
     static Bitmap paint(Species s, Config.Style style) {
         FishArt a = new FishArt(s.texW, s.texH, look(s.id));
@@ -356,7 +355,7 @@ final class FishArt {
         }
 
         shadeBody(b);
-        drawGill(b);
+        drawGill();
         drawEye();
 
         if (k.pectoral != null) {
@@ -421,17 +420,21 @@ final class FishArt {
         p.setStrokeWidth(Math.max(1f, texW / 512f));
         p.setColor(0x10000000);
         float step = texW * 0.022f;
-        for (float sx = b.left; sx < b.right; sx += step) {
-            for (float sy = b.top; sy < b.bottom; sy += step * 0.9f) {
+        float sx = b.left;
+        while (sx < b.right) {
+            float sy = b.top;
+            while (sy < b.bottom) {
                 float off = ((int) ((sx - b.left) / step) % 2) * step * 0.45f;
                 c.drawArc(new RectF(sx - step * 0.6f, sy + off - step * 0.5f, sx + step * 0.6f, sy + off + step * 0.5f), 100f, 160f, false, p);
+                sy += step * 0.9f;
             }
+            sx += step;
         }
         p.setStyle(Paint.Style.FILL);
         c.restore();
     }
 
-    private void drawGill(RectF b) {
+    private void drawGill() {
         float gx = x(k.eyeX - (k.nose - k.eyeX) * 1.3f);
         float topY = y(topAt(gx / texW) * 0.7f + midAt(gx / texW) * 0.3f);
         float botY = y(bottomAt(gx / texW) * 0.7f + midAt(gx / texW) * 0.3f);
@@ -714,8 +717,10 @@ final class FishArt {
                     a.p.setStyle(Paint.Style.STROKE);
                     a.p.setStrokeWidth(a.texW * 0.004f);
                     a.p.setColor(0x14A05A00);
-                    for (float xf = 0.3f; xf < 0.9f; xf += 0.018f) {
+                    float xf = 0.3f;
+                    while (xf < 0.9f) {
                         a.c.drawLine(a.x(xf), 0, a.x(xf - 0.02f), a.texH, a.p);
+                        xf += 0.018f;
                     }
                     a.p.setStyle(Paint.Style.FILL);
                     a.oval(0xFFFFFFFF, 0.30f, 0.005f, 0.022f, 0.008f);
@@ -968,8 +973,10 @@ final class FishArt {
                         Path w = new Path();
                         float base = i * 0.042f;
                         w.moveTo(0, a.y(base));
-                        for (float xf = 0f; xf <= 1f; xf += 0.01f) {
+                        float xf = 0f;
+                        while (xf <= 1f) {
                             w.lineTo(a.x(xf), a.y(base + 0.012f * (float) Math.sin(xf * 34f + i * 1.7f) + 0.006f * (float) Math.sin(xf * 71f + i)));
+                            xf += 0.01f;
                         }
                         a.c.drawPath(w, a.p);
                     }
@@ -1047,8 +1054,10 @@ final class FishArt {
                     a.p.setStyle(Paint.Style.STROKE);
                     a.p.setStrokeWidth(a.texW * 0.016f);
                     a.p.setColor(0xD03BC9DB);
-                    for (float xf = 0.2f; xf < 0.9f; xf += 0.045f) {
+                    float xf = 0.2f;
+                    while (xf < 0.9f) {
                         a.c.drawLine(a.x(xf), a.y(-0.3f), a.x(xf - 0.08f), a.y(0.3f), a.p);
+                        xf += 0.045f;
                     }
                     a.p.setStyle(Paint.Style.FILL);
                     a.p.setColor(0xFFFFFFFF);
@@ -1098,8 +1107,10 @@ final class FishArt {
                     Path belly = new Path();
                     belly.moveTo(0, a.texH);
                     belly.lineTo(0, a.y(0.02f));
-                    for (float xf = 0f; xf <= 1f; xf += 0.02f) {
+                    float xf = 0f;
+                    while (xf <= 1f) {
                         belly.lineTo(a.x(xf), a.y(0.012f + 0.006f * (float) Math.sin(xf * 40f) + (xf > 0.8f ? (xf - 0.8f) * 0.08f : 0f)));
+                        xf += 0.02f;
                     }
                     belly.lineTo(a.texW, a.texH);
                     belly.close();
@@ -1111,9 +1122,11 @@ final class FishArt {
                         a.oval(0xEE15181C, 0.0f, -0.15f, 0.035f, 0.025f);
                     }
                     if (leopard) {
-                        for (float xf = 0.3f; xf < 0.85f; xf += 0.08f) {
+                        xf = 0.3f;
+                        while (xf < 0.85f) {
                             a.oval(0xC02B2620, xf, a.topAt(xf) * 0.75f, 0.022f, 0.03f);
                             a.oval(0x902B2620, xf + 0.04f, -0.02f, 0.008f, 0.008f);
+                            xf += 0.08f;
                         }
                     }
                 };
@@ -1174,8 +1187,10 @@ final class FishArt {
                         float xf = 0.25f + r.nextFloat() * 0.7f;
                         a.oval(0x30E9ECEF, xf, a.bottomAt(xf) * (0.4f + r.nextFloat() * 0.5f), 0.006f + r.nextFloat() * 0.01f, 0.004f + r.nextFloat() * 0.006f);
                     }
-                    for (float xf = 0.82f; xf < 0.96f; xf += 0.018f) {
+                    float xf = 0.82f;
+                    while (xf < 0.96f) {
                         a.oval(0x80596069, xf, a.topAt(xf) + 0.008f, 0.005f, 0.004f);
+                        xf += 0.018f;
                     }
                     a.stroke(0x90101215, 0.0035f, 0.97f, 0.018f, 0.9f, 0.045f, 0.84f, 0.042f);
                 };
@@ -1189,9 +1204,11 @@ final class FishArt {
                     a.p.setShader(new LinearGradient(a.x(0.74f), 0, a.x(0.47f), 0, 0xFF4A515B, 0xFFE9ECEF, Shader.TileMode.CLAMP));
                     a.c.drawPath(flipper, a.p);
                     a.p.setShader(null);
-                    for (float t = 0.2f; t < 0.95f; t += 0.11f) {
+                    float t = 0.2f;
+                    while (t < 0.95f) {
                         float fx = 0.72f - 0.24f * t;
                         a.oval(0xB0F8F9FA, fx, 0.04f + 0.21f * t, 0.004f, 0.004f);
+                        t += 0.11f;
                     }
                 };
                 break;
@@ -1260,8 +1277,10 @@ final class FishArt {
                     a.p.setStyle(Paint.Style.STROKE);
                     a.p.setStrokeWidth(a.texW * 0.003f);
                     a.p.setColor(0x30FFFFFF);
-                    for (float xf = 0.3f; xf < 0.7f; xf += 0.03f) {
+                    float xf = 0.3f;
+                    while (xf < 0.7f) {
                         a.c.drawLine(a.x(xf), a.y(0.02f), a.x(xf - 0.01f), a.y(0.07f), a.p);
+                        xf += 0.03f;
                     }
                     a.p.setStyle(Paint.Style.FILL);
                 };
@@ -1308,8 +1327,10 @@ final class FishArt {
                 k.eyeR = 0.014f;
                 k.iris = 0xFFCED4DA;
                 k.pattern = a -> {
-                    for (float xf = 0.28f; xf < 0.8f; xf += 0.045f) {
+                    float xf = 0.28f;
+                    while (xf < 0.8f) {
                         a.stroke(0x40212529, 0.012f, xf + 0.012f, -0.06f, xf - 0.01f, -0.005f);
+                        xf += 0.045f;
                     }
                     Random r = new Random(3);
                     for (int i = 0; i < 14; i++) {
@@ -1340,8 +1361,10 @@ final class FishArt {
                 k.eyeR = 0.028f;
                 k.iris = 0xFFB8C4D0;
                 k.pattern = a -> {
-                    for (float xf = 0.72f; xf > 0.3f; xf -= 0.05f) {
+                    float xf = 0.72f;
+                    while (xf > 0.3f) {
                         a.oval(0x9014202C, xf, -0.03f, 0.008f, 0.008f);
+                        xf -= 0.05f;
                     }
                     a.oval(0x40FFFFFF, 0.58f, -0.005f, 0.28f, 0.02f);
                 };

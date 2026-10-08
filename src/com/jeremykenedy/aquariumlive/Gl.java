@@ -11,6 +11,7 @@ import java.nio.ShortBuffer;
 
 /** Small helpers over GLES 2.0: shader programs, textures and meshes. */
 final class Gl {
+    private static int bound = -1;
 
     private Gl() {
     }
@@ -82,8 +83,6 @@ final class Gl {
         return b;
     }
 
-    private static int bound = -1;
-
     /** Forgets which mesh is bound; call when a new GL context starts. */
     static void resetBindings() {
         bound = -1;
@@ -142,7 +141,7 @@ final class Gl {
             GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, ibo);
             GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER, idx.length * 2, shorts(idx), GLES20.GL_STATIC_DRAW);
             count = idx.length;
-            bound = -1;
+            resetBindings();
         }
 
         /** Binds this mesh's buffers and points the position and uv attributes at them. */

@@ -219,7 +219,8 @@ final class PlantArt {
             c.drawPath(stipe, p);
             p.setStyle(Paint.Style.FILL);
             boolean left = rnd.nextBoolean();
-            for (float y = h - 60f; y > top + 10f; y -= r(26f, 40f)) {
+            float y = h - 60f;
+            while (y > top + 10f) {
                 float t = (h - y) / (h - top);
                 int i = Math.min(segs - 1, (int) (t * segs));
                 float bx = sx[i] + (sx[i + 1] - sx[i]) * (t * segs - i);
@@ -227,6 +228,7 @@ final class PlantArt {
                 float ang = (float) Math.toRadians(left ? r(-160, -112) : r(-68, -20));
                 left = !left;
                 kelpBlade(bx, y, ang, len, r(28f, 42f));
+                y -= r(26f, 40f);
             }
         }
         Path hold = blob(w * 0.5f, h - 22f, w * 0.3f, 30f, 12, 0.35f, h - 1f);
@@ -240,11 +242,15 @@ final class PlantArt {
         c.rotate((float) Math.toDegrees(angle));
         Path b = new Path();
         b.moveTo(10f, 0f);
-        for (float t = 0f; t <= 1.001f; t += 0.08f) {
+        float t = 0f;
+        while (t <= 1.001f) {
             b.lineTo(10f + len * t, -width * (float) Math.sin(Math.PI * Math.min(1f, t * 1.15f)) * 0.5f + (float) Math.sin(t * 30f) * 2.2f);
+            t += 0.08f;
         }
-        for (float t = 1f; t >= 0f; t -= 0.08f) {
+        t = 1f;
+        while (t >= 0f) {
             b.lineTo(10f + len * t, width * (float) Math.sin(Math.PI * Math.min(1f, t * 1.15f)) * 0.5f + (float) Math.sin(t * 30f + 1f) * 2.2f);
+            t -= 0.08f;
         }
         b.close();
         p.setColor(0xFFFFFFFF);
@@ -337,8 +343,10 @@ final class PlantArt {
             float y0 = h * (0.1f + i * 0.037f);
             g.moveTo(0, y0);
             float phase = r(0f, 6f);
-            for (float x = 0; x <= w; x += 6f) {
+            float x = 0;
+            while (x <= w) {
                 g.lineTo(x, y0 + (float) Math.sin(x * 0.05f + phase) * h * 0.035f + (float) Math.sin(x * 0.013f + i) * h * 0.02f);
+                x += 6f;
             }
             c.drawPath(g, p);
         }
@@ -466,9 +474,11 @@ final class PlantArt {
             c.drawLine(0, 0, len * 0.96f, 0, p);
             p.setStrokeWidth(Math.max(1f, width * 0.05f));
             p.setColor(0x26FFFFFF);
-            for (float s = 0.15f; s < 0.9f; s += 0.11f) {
+            float s = 0.15f;
+            while (s < 0.9f) {
                 c.drawLine(len * s, 0, len * (s + 0.09f), -width * 0.6f, p);
                 c.drawLine(len * s, 0, len * (s + 0.09f), width * 0.6f, p);
+                s += 0.11f;
             }
             p.setStyle(Paint.Style.FILL);
         }
@@ -510,13 +520,15 @@ final class PlantArt {
             c.drawPath(stem, p);
             p.setShader(null);
             p.setStyle(Paint.Style.FILL);
-            for (float y = h - 14f; y > top + 6f; y -= h * 0.075f) {
+            float y = h - 14f;
+            while (y > top + 6f) {
                 float f = (h - y) / (h - top);
                 float lx = x + lean * f * f;
                 int col = lerp(0xFF3A8A3A, variant == 0 ? 0xFFE8590C : 0xFFC2255C, f * f);
                 float len = w * (0.3f - 0.1f * f);
                 leaf(lx, y, (float) (-Math.PI / 2 - 1.15 + 0.25 * f), len, len * 0.24f, FishArt.darken(col, 0.8f), col, true);
                 leaf(lx, y - 4f, (float) (-Math.PI / 2 + 1.15 - 0.25 * f), len, len * 0.24f, FishArt.darken(col, 0.8f), col, true);
+                y -= h * 0.075f;
             }
         }
     }

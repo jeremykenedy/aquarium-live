@@ -9,8 +9,8 @@
 #   ~/.android/aquarium-live.pass
 set -euo pipefail
 
-VERSION_CODE=2
-VERSION_NAME=1.0.1
+VERSION_CODE=3
+VERSION_NAME=1.0.2
 MIN_SDK=22
 TARGET_SDK=30
 

@@ -37,6 +37,7 @@ public final class SimTest {
         toneBands();
         toneQuantize();
         everySceneHasSoloAndSchoolingFish();
+        settingsDefaultsAreRealChoices();
         tintCoversEveryHour();
         configRejectsOutOfRangeNumbers();
         renderSizeFollowsResolution();
@@ -315,6 +316,56 @@ public final class SimTest {
         check("specks on parsed", Config.fromMap(m).particles);
         m.put(Config.PARTICLES, "sometimes");
         check("specks garbage falls back to on", Config.fromMap(m).particles);
+    }
+
+    private static String read(java.io.File f) {
+        try {
+            return new String(java.nio.file.Files.readAllBytes(f.toPath()), java.nio.charset.StandardCharsets.UTF_8);
+        } catch (java.io.IOException e) {
+            check("could not read " + f + ": " + e.getMessage(), false);
+            return "";
+        }
+    }
+
+    private static java.util.List<String> array(String arrays, String name) {
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("<string-array name=\"" + name + "\">(.*?)</string-array>", java.util.regex.Pattern.DOTALL).matcher(arrays);
+        java.util.List<String> items = new java.util.ArrayList<>();
+        if (m.find()) {
+            java.util.regex.Matcher item = java.util.regex.Pattern.compile("<item>(.*?)</item>").matcher(m.group(1));
+            while (item.find()) {
+                items.add(item.group(1));
+            }
+        }
+        return items;
+    }
+
+    static void settingsDefaultsAreRealChoices() {
+        String res = System.getProperty("res.dir", "res");
+        String settings = read(new java.io.File(res, "xml/settings.xml"));
+        String arrays = read(new java.io.File(res, "values/arrays.xml"));
+        java.util.regex.Matcher pref = java.util.regex.Pattern.compile("<(?:MultiSelect)?ListPreference([^>]*)/>", java.util.regex.Pattern.DOTALL).matcher(settings);
+        int lists = 0;
+        while (pref.find()) {
+            String attrs = pref.group(1);
+            String key = attr(attrs, "key");
+            java.util.List<String> names = array(arrays, attr(attrs, "entries").replace("@array/", ""));
+            java.util.List<String> values = array(arrays, attr(attrs, "entryValues").replace("@array/", ""));
+            String def = attr(attrs, "defaultValue");
+            check(key + " has a name for every choice", !values.isEmpty() && names.size() == values.size());
+            java.util.List<String> defaults = def.startsWith("@array/") ? array(arrays, def.replace("@array/", "")) : java.util.Collections.singletonList(def);
+            check(key + " defaults to real choices", !defaults.isEmpty() && values.containsAll(defaults));
+            check(key + " never defaults to Random", !defaults.contains(Config.RANDOM));
+            if ("sea_life".equals(key)) {
+                check("sea life defaults to every group", new java.util.HashSet<>(defaults).equals(new java.util.HashSet<>(java.util.Arrays.asList(Species.GROUPS))));
+            }
+            lists++;
+        }
+        check("every list setting was checked (" + lists + ")", lists == 15);
+    }
+
+    private static String attr(String attrs, String name) {
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("android:" + name + "=\"([^\"]*)\"").matcher(attrs);
+        return m.find() ? m.group(1) : "";
     }
 
     static void everySceneHasSoloAndSchoolingFish() {

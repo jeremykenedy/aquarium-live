@@ -1,14 +1,21 @@
 # Changelog
 
-## Unreleased
+## 1.0.2
+
+### Fixed
+
+- A fresh install started with Which sea life on a random mix instead of every group, because the setting's default list included the random-mix choice. It now defaults to every group, and a test checks every setting's default against its own choices.
+
+### Security
+
+- The screensaver service is no longer exported; only the system can start it. Checked on the Fire TV, Google TV 14, Android TV 12 and Android 5.1.
+- A network security policy refuses cleartext traffic and user-installed certificates.
 
 ### Changed
 
 - 100% line and branch coverage of every class that runs on a plain JVM. The render size, the automatic frame rate and the art cache clean-up moved out of the Android classes so they are tested.
-- Fixed the SonarCloud reliability findings: whole-number arithmetic passed where decimals are expected, and unchecked file deletes.
-- New Code style, Documentation and Security workflows. Every action is pinned to a commit.
-- The screensaver service is no longer exported; only the system can start it. A network security policy refuses cleartext traffic and user-installed certificates.
-- Dependabot keeps the pinned GitHub Actions up to date.
+- Fixed the SonarCloud reliability findings and the Codacy code findings: fields come before methods, loops count with whole numbers or step a float in a while loop, and a few unused names are gone. The painted art is byte-for-byte unchanged.
+- New Code style, Documentation and Security workflows, Codacy configuration, and Dependabot for the pinned GitHub Actions.
 
 ## 1.0.1
 

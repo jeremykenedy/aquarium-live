@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""Checks the documentation: local links and anchors, the README contents list
-(every ## section), the banners, the license line, and that every GitHub
-Action is pinned to a commit."""
+"""
+Check the documentation.
+
+Checks local links and anchors, the README contents list (every ## section),
+the banners, the license line, and that every GitHub Action is pinned to a
+commit.
+"""
 
 import re
 import sys
@@ -11,12 +15,12 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def without_code(text):
-    return re.sub(r"```.*?```", "", text, flags=re.S)
+    return re.sub(r"```.*?```", "", text, flags=re.DOTALL)
 
 
 def anchors(path, levels="1,6"):
     found = set()
-    for heading in re.findall(r"^#{" + levels + r"} (.+)$", without_code(path.read_text()), flags=re.M):
+    for heading in re.findall(r"^#{" + levels + r"} (.+)$", without_code(path.read_text()), flags=re.MULTILINE):
         found.add(re.sub(r"[^\w\- ]", "", heading.strip().lower()).replace(" ", "-"))
     return found
 

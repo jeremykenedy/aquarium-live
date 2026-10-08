@@ -11,10 +11,76 @@ import java.util.Random;
  * back wall (1).
  */
 public final class Sim {
-
     public static final float H = 1080f;
     static final float TWO_PI = (float) (Math.PI * 2);
     static final float SURFACE_MARGIN = 54f;
+
+    public static final PlantKind LIVE_ROCK = new PlantKind("live_rock", 512, 256, 3);
+    public static final PlantKind BOULDER = new PlantKind("boulder", 512, 256, 3);
+    public static final PlantKind STAGHORN = new PlantKind("staghorn", 512, 512, 2);
+    public static final PlantKind BRAIN = new PlantKind("brain", 512, 256, 2);
+    public static final PlantKind SEA_FAN = new PlantKind("sea_fan", 512, 512, 2);
+    public static final PlantKind ANEMONE = new PlantKind("anemone", 512, 512, 2);
+    public static final PlantKind SEAGRASS = new PlantKind("seagrass", 256, 512, 2);
+    public static final PlantKind KELP = new PlantKind("kelp", 256, 2048, 3);
+    public static final PlantKind STONES = new PlantKind("stones", 512, 256, 3);
+    public static final PlantKind DRIFTWOOD = new PlantKind("driftwood", 512, 512, 2);
+    public static final PlantKind VALLIS = new PlantKind("vallis", 256, 512, 3);
+    public static final PlantKind SWORD = new PlantKind("sword", 512, 512, 2);
+    public static final PlantKind RED_STEM = new PlantKind("red_stem", 256, 512, 2);
+
+    public static final PlantKind[] PLANT_KINDS = {
+        LIVE_ROCK, BOULDER, STAGHORN, BRAIN, SEA_FAN, ANEMONE, SEAGRASS, KELP, STONES, DRIFTWOOD, VALLIS, SWORD, RED_STEM,
+    };
+
+    static final Placement[] OCEAN_LAYOUT = {
+        new Placement(BOULDER, 3f, 0.6f, 0.97f, 120f, 230f, 0f, false),
+        new Placement(BOULDER, 1f, 0.2f, 0.5f, 90f, 150f, 0f, false),
+        new Placement(SEAGRASS, 3f, 0.7f, 0.98f, 120f, 200f, 12f, false),
+    };
+
+    static final Placement[] REEF_LAYOUT = {
+        new Placement(LIVE_ROCK, 4f, 0.62f, 0.97f, 190f, 330f, 0f, false),
+        new Placement(SEA_FAN, 3f, 0.66f, 0.95f, 260f, 400f, 4f, false),
+        new Placement(STAGHORN, 4f, 0.35f, 0.9f, 170f, 280f, 0f, false),
+        new Placement(BRAIN, 3f, 0.2f, 0.75f, 80f, 135f, 0f, false),
+        new Placement(ANEMONE, 2f, 0.15f, 0.6f, 140f, 210f, 8f, false),
+        new Placement(SEAGRASS, 3f, 0.7f, 0.98f, 220f, 320f, 14f, false),
+        new Placement(SEAGRASS, 5f, 0.02f, 0.3f, 240f, 360f, 22f, true),
+    };
+
+    static final Placement[] KELP_LAYOUT = {
+        new Placement(KELP, 8f, 0.55f, 0.97f, 950f, 1200f, 40f, false),
+        new Placement(BOULDER, 4f, 0.45f, 0.95f, 130f, 240f, 0f, false),
+        new Placement(KELP, 2f, 0.32f, 0.55f, 1000f, 1250f, 44f, false),
+        new Placement(STONES, 2f, 0.15f, 0.5f, 80f, 140f, 0f, false),
+        new Placement(KELP, 2f, 0.02f, 0.22f, 1100f, 1350f, 50f, true),
+    };
+
+    static final Placement[] TANK_LAYOUT = {
+        new Placement(VALLIS, 11f, 0.68f, 0.98f, 430f, 700f, 26f, false),
+        new Placement(DRIFTWOOD, 1f, 0.45f, 0.8f, 300f, 420f, 0f, false),
+        new Placement(RED_STEM, 4f, 0.5f, 0.9f, 300f, 460f, 11f, false),
+        new Placement(STONES, 3f, 0.3f, 0.9f, 80f, 150f, 0f, false),
+        new Placement(SWORD, 3f, 0.25f, 0.7f, 220f, 330f, 6f, false),
+        new Placement(VALLIS, 5f, 0.02f, 0.3f, 300f, 520f, 30f, true),
+    };
+
+    public final float w;
+    public final Config cfg;
+    public final List<Creature> creatures = new ArrayList<>();
+    public final List<Plant> plants = new ArrayList<>();
+    public final List<Bubble> bubbles = new ArrayList<>();
+    public final List<Mote> motes = new ArrayList<>();
+    final List<School> schools = new ArrayList<>();
+    private final List<Creature> predators = new ArrayList<>();
+    private Creature[] fishArray = new Creature[0];
+    private Creature[] predatorArray = new Creature[0];
+    final float[] airstones;
+    private final Random rnd;
+    private float strayTimer;
+    private final float[] emitTimers;
+    private float time;
 
     /** Where the sea floor meets an object standing at depth z. */
     public static float rootY(float z) {
@@ -165,24 +231,6 @@ public final class Sim {
         }
     }
 
-    public static final PlantKind LIVE_ROCK = new PlantKind("live_rock", 512, 256, 3);
-    public static final PlantKind BOULDER = new PlantKind("boulder", 512, 256, 3);
-    public static final PlantKind STAGHORN = new PlantKind("staghorn", 512, 512, 2);
-    public static final PlantKind BRAIN = new PlantKind("brain", 512, 256, 2);
-    public static final PlantKind SEA_FAN = new PlantKind("sea_fan", 512, 512, 2);
-    public static final PlantKind ANEMONE = new PlantKind("anemone", 512, 512, 2);
-    public static final PlantKind SEAGRASS = new PlantKind("seagrass", 256, 512, 2);
-    public static final PlantKind KELP = new PlantKind("kelp", 256, 2048, 3);
-    public static final PlantKind STONES = new PlantKind("stones", 512, 256, 3);
-    public static final PlantKind DRIFTWOOD = new PlantKind("driftwood", 512, 512, 2);
-    public static final PlantKind VALLIS = new PlantKind("vallis", 256, 512, 3);
-    public static final PlantKind SWORD = new PlantKind("sword", 512, 512, 2);
-    public static final PlantKind RED_STEM = new PlantKind("red_stem", 256, 512, 2);
-
-    public static final PlantKind[] PLANT_KINDS = {
-        LIVE_ROCK, BOULDER, STAGHORN, BRAIN, SEA_FAN, ANEMONE, SEAGRASS, KELP, STONES, DRIFTWOOD, VALLIS, SWORD, RED_STEM,
-    };
-
     /** A placement rule: how many of a kind, at what depth and size. */
     static final class Placement {
         final PlantKind kind;
@@ -205,39 +253,6 @@ public final class Sim {
             this.edgesOnly = edgesOnly;
         }
     }
-
-    static final Placement[] OCEAN_LAYOUT = {
-        new Placement(BOULDER, 3f, 0.6f, 0.97f, 120f, 230f, 0f, false),
-        new Placement(BOULDER, 1f, 0.2f, 0.5f, 90f, 150f, 0f, false),
-        new Placement(SEAGRASS, 3f, 0.7f, 0.98f, 120f, 200f, 12f, false),
-    };
-
-    static final Placement[] REEF_LAYOUT = {
-        new Placement(LIVE_ROCK, 4f, 0.62f, 0.97f, 190f, 330f, 0f, false),
-        new Placement(SEA_FAN, 3f, 0.66f, 0.95f, 260f, 400f, 4f, false),
-        new Placement(STAGHORN, 4f, 0.35f, 0.9f, 170f, 280f, 0f, false),
-        new Placement(BRAIN, 3f, 0.2f, 0.75f, 80f, 135f, 0f, false),
-        new Placement(ANEMONE, 2f, 0.15f, 0.6f, 140f, 210f, 8f, false),
-        new Placement(SEAGRASS, 3f, 0.7f, 0.98f, 220f, 320f, 14f, false),
-        new Placement(SEAGRASS, 5f, 0.02f, 0.3f, 240f, 360f, 22f, true),
-    };
-
-    static final Placement[] KELP_LAYOUT = {
-        new Placement(KELP, 8f, 0.55f, 0.97f, 950f, 1200f, 40f, false),
-        new Placement(BOULDER, 4f, 0.45f, 0.95f, 130f, 240f, 0f, false),
-        new Placement(KELP, 2f, 0.32f, 0.55f, 1000f, 1250f, 44f, false),
-        new Placement(STONES, 2f, 0.15f, 0.5f, 80f, 140f, 0f, false),
-        new Placement(KELP, 2f, 0.02f, 0.22f, 1100f, 1350f, 50f, true),
-    };
-
-    static final Placement[] TANK_LAYOUT = {
-        new Placement(VALLIS, 11f, 0.68f, 0.98f, 430f, 700f, 26f, false),
-        new Placement(DRIFTWOOD, 1f, 0.45f, 0.8f, 300f, 420f, 0f, false),
-        new Placement(RED_STEM, 4f, 0.5f, 0.9f, 300f, 460f, 11f, false),
-        new Placement(STONES, 3f, 0.3f, 0.9f, 80f, 150f, 0f, false),
-        new Placement(SWORD, 3f, 0.25f, 0.7f, 220f, 330f, 6f, false),
-        new Placement(VALLIS, 5f, 0.02f, 0.3f, 300f, 520f, 30f, true),
-    };
 
     /** How many of each sea-life group to add, by amount (none, a little, some, lots). */
     static int seaLifeCount(String group, int amount) {
@@ -279,22 +294,6 @@ public final class Sim {
                 return new int[0];
         }
     }
-
-    public final float w;
-    public final Config cfg;
-    public final List<Creature> creatures = new ArrayList<>();
-    public final List<Plant> plants = new ArrayList<>();
-    public final List<Bubble> bubbles = new ArrayList<>();
-    public final List<Mote> motes = new ArrayList<>();
-    final List<School> schools = new ArrayList<>();
-    private final List<Creature> predators = new ArrayList<>();
-    private Creature[] fishArray = new Creature[0];
-    private Creature[] predatorArray = new Creature[0];
-    final float[] airstones;
-    private final Random rnd;
-    private float strayTimer;
-    private final float[] emitTimers;
-    private float time;
 
     public Sim(Config cfg, float width, long seed) {
         this.cfg = cfg;

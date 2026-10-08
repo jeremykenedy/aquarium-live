@@ -1,5 +1,6 @@
 package com.jeremykenedy.aquariumlive;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
@@ -11,18 +12,6 @@ import java.util.Set;
  * unrecognised falls back to its default instead of failing.
  */
 public final class Config {
-
-    public enum Theme { OCEAN, REEF, KELP_FOREST, FISH_TANK }
-
-    public enum Lighting { DAY, EVENING, NIGHT, AUTO }
-
-    /**
-     * How everything is drawn. MOVIE is a glossy 3D animated-film look,
-     * PAINTED a classic hand-painted 2D animation look, RETRO an old
-     * desktop screensaver look.
-     */
-    public enum Style { REALISTIC, ANIMATED, CARTOON, MOVIE, PAINTED, RETRO }
-
     public static final String THEME = "theme";
     public static final String STYLE = "style";
     public static final String FISH_COUNT = "fish_count";
@@ -61,7 +50,7 @@ public final class Config {
     /** 0 none, 1 one school, 2 a few schools, 3 huge schools. */
     public int schools = 2;
     /** Which sea-life groups may appear (see Species.GROUPS). */
-    public java.util.Set<String> seaLife = new java.util.HashSet<>(java.util.Arrays.asList(Species.GROUPS));
+    public Set<String> seaLife = new HashSet<>(Arrays.asList(Species.GROUPS));
     /** 0 none, 1 a little, 2 some, 3 lots. */
     public int seaLifeAmount = 2;
     /** Sunlight from the surface: 0 off, 1 soft, 2 bright. */
@@ -78,6 +67,21 @@ public final class Config {
     /** 60, 30, or 0 to start at 60 and settle on a steady 30 if the TV cannot keep up. */
     public int fps = 0;
     public boolean clock = false;
+
+    static final float[] DAY_TINT = {1f, 1f, 1f};
+    static final float[] EVENING_TINT = {0.95f, 0.78f, 0.62f};
+    static final float[] NIGHT_TINT = {0.20f, 0.29f, 0.52f};
+
+    public enum Theme { OCEAN, REEF, KELP_FOREST, FISH_TANK }
+
+    public enum Lighting { DAY, EVENING, NIGHT, AUTO }
+
+    /**
+     * How everything is drawn. MOVIE is a glossy 3D animated-film look,
+     * PAINTED a classic hand-painted 2D animation look, RETRO an old
+     * desktop screensaver look.
+     */
+    public enum Style { REALISTIC, ANIMATED, CARTOON, MOVIE, PAINTED, RETRO }
 
     public static Config fromMap(Map<String, ?> values) {
         return fromMap(values, new Random());
@@ -189,10 +193,6 @@ public final class Config {
         }
     }
 
-    static final float[] DAY_TINT = {1f, 1f, 1f};
-    static final float[] EVENING_TINT = {0.95f, 0.78f, 0.62f};
-    static final float[] NIGHT_TINT = {0.20f, 0.29f, 0.52f};
-
     private static float[] autoTint(float hour) {
         float h = ((hour % 24f) + 24f) % 24f;
         if (h >= 8f && h < 17f) {
@@ -258,12 +258,12 @@ public final class Config {
     }
 
     /** A MultiSelectListPreference stores a Set; anything else falls back. Unknown names are dropped. */
-    private static java.util.Set<String> parseSet(Object value, java.util.Set<String> fallback) {
-        if (!(value instanceof java.util.Set)) {
+    private static Set<String> parseSet(Object value, Set<String> fallback) {
+        if (!(value instanceof Set)) {
             return fallback;
         }
-        java.util.Set<String> out = new java.util.HashSet<>();
-        for (Object o : (java.util.Set<?>) value) {
+        Set<String> out = new HashSet<>();
+        for (Object o : (Set<?>) value) {
             for (String g : Species.GROUPS) {
                 if (g.equals(String.valueOf(o))) {
                     out.add(g);

@@ -259,8 +259,10 @@ final class CreatureArt {
             hex.close();
             c.drawPath(hex, p);
         }
-        for (float x = 96; x < 410; x += 26) {
+        float x = 96;
+        while (x < 410) {
             c.drawLine(x, 300, x + 6, 278, p);
+            x += 26;
         }
         p.setStyle(Paint.Style.FILL);
         for (float[] s : scutes) {
@@ -287,8 +289,10 @@ final class CreatureArt {
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(2.5f);
         p.setColor(0x904A4024);
-        for (float y = h * 0.05f; y < h; y += 22f) {
+        float y = h * 0.05f;
+        while (y < h) {
             c.drawLine(0, y, w, y + 8, p);
+            y += 22f;
         }
         p.setStrokeWidth(6f);
         p.setColor(0x60E6D8A8);
@@ -361,7 +365,8 @@ final class CreatureArt {
         p.setShader(null);
         c.save();
         c.clipPath(arm);
-        for (float y = h - 14f; y > 20; y -= 18f * (0.4f + 0.6f * y / h)) {
+        float y = h - 14f;
+        while (y > 20) {
             float t = y / h;
             float rr = 2.5f + 6f * t;
             float x = 32 + 18f * t;
@@ -369,6 +374,7 @@ final class CreatureArt {
             c.drawCircle(x, y, rr, p);
             p.setColor(0x60803020);
             c.drawCircle(x, y, rr * 0.45f, p);
+            y -= 18f * (0.4f + 0.6f * y / h);
         }
         c.restore();
     }
@@ -412,23 +418,29 @@ final class CreatureArt {
         c.drawLine(16, h, 16, 0, p);
         p.setShader(null);
         p.setStyle(Paint.Style.FILL);
-        for (float y = h - 20f; y > 40; y -= 26) {
+        float y = h - 20f;
+        while (y > 40) {
             p.setColor((int) (0x60 * y / h) << 24 | 0xFFFFFF);
             c.drawCircle(16, y, 3f, p);
+            y -= 26;
         }
     }
 
     private void jellyArm() {
         Path ribbon = new Path();
         ribbon.moveTo(40, h);
-        for (float y = h; y > 20; y -= 14) {
+        float y = h;
+        while (y > 20) {
             float t = y / h;
             ribbon.lineTo(64 - 26 * t + (float) Math.sin(y * 0.09f) * 12 * t - 6, y);
+            y -= 14;
         }
         ribbon.lineTo(64, 6);
-        for (float y = 20; y <= h; y += 14) {
+        y = 20;
+        while (y <= h) {
             float t = y / h;
             ribbon.lineTo(64 + 26 * t + (float) Math.sin(y * 0.09f + 1.5f) * 12 * t + 6, y);
+            y += 14;
         }
         ribbon.close();
         p.setColor(0xFFFFFFFF);
@@ -545,7 +557,6 @@ final class CreatureArt {
     }
 
     private void crab() {
-        int shell = 0xFFD9480F;
         int dark = 0xFF9C2F06;
         p.setStyle(Paint.Style.STROKE);
         p.setColor(dark);
