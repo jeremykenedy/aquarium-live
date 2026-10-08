@@ -24,15 +24,17 @@
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
+
+
+<p align="center">
+    <a href="https://app.aikido.dev/repositories/3326671"><img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Secured by Aikido" height="32"></a>
+</p>
+
 <p align="center">
     <a href="https://github.com/jeremykenedy"><img src="https://img.shields.io/github/followers/jeremykenedy?label=Follow%20me&amp;style=social" alt="Follow me on GitHub"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live" title="Open the repository and click Star"><img src="https://img.shields.io/badge/Star-this%20repo-yellow?logo=github&amp;style=social" alt="Star this repo"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/stargazers"><img src="https://img.shields.io/github/stars/jeremykenedy/aquarium-live?style=social" alt="Star aquarium-live on GitHub"></a>
     <a href="https://github.com/sponsors/jeremykenedy" title="Sponsor jeremykenedy"><img src="https://img.shields.io/badge/Sponsor-jeremykenedy-ea4aaa?logo=githubsponsors&amp;logoColor=white" alt="Sponsor jeremykenedy"></a>
-</p>
-
-<p align="center">
-    <a href="https://app.aikido.dev/repositories/3326671"><img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Secured by Aikido" height="32"></a>
 </p>
 
 <p align="center">
