@@ -121,9 +121,21 @@ final class AquariumView extends FrameLayout {
             return null;
         }
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display.Mode mode = wm.getDefaultDisplay().getMode();
-        int pw = Math.max(mode.getPhysicalWidth(), mode.getPhysicalHeight());
-        int ph = Math.min(mode.getPhysicalWidth(), mode.getPhysicalHeight());
+        Display display = wm.getDefaultDisplay();
+        int w;
+        int h;
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            Display.Mode mode = display.getMode();
+            w = mode.getPhysicalWidth();
+            h = mode.getPhysicalHeight();
+        } else {
+            android.graphics.Point real = new android.graphics.Point();
+            display.getRealSize(real);
+            w = real.x;
+            h = real.y;
+        }
+        int pw = Math.max(w, h);
+        int ph = Math.min(w, h);
         if (pw <= 0 || ph <= 0) {
             return null;
         }

@@ -9,6 +9,8 @@
 <p align="center">A living aquarium screensaver for Fire TV, Android TV and Google TV. Every fish, plant and coral is drawn by the app in real time: no video, no downloads, no ads, and no tracking or analytics of any kind.</p>
 
 <p align="center">
+    <a href="https://github.com/jeremykenedy/aquarium-live/releases/latest"><img src="https://img.shields.io/github/v/release/jeremykenedy/aquarium-live" alt="Latest release"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/releases"><img src="https://img.shields.io/github/downloads/jeremykenedy/aquarium-live/total" alt="Downloads"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
     <a href="https://dashboard.gitguardian.com/"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/gitguardian.yml/badge.svg" alt="GitGuardian scan"></a>
     <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&metric=alert_status" alt="Quality Gate Status"></a>
@@ -27,6 +29,7 @@
 
 ## Table of Contents
 
+- [Quick start](#quick-start)
 - [Features](#features)
 - [Scenes](#scenes)
 - [Looks](#looks)
@@ -37,11 +40,30 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Setting it as the screensaver](#setting-it-as-the-screensaver)
-- [Building from source](#building-from-source)
-- [How it works](#how-it-works)
-- [Testing](#testing)
+- [Updating](#updating)
 - [Uninstalling](#uninstalling)
+- [Troubleshooting](#troubleshooting)
+- [How it works](#how-it-works)
+- [Building from source](#building-from-source)
+- [Testing](#testing)
+- [Continuous integration](#continuous-integration)
+- [Documentation](#documentation)
+- [Changelog](#changelog)
 - [License](#license)
+
+## Quick start
+
+With ADB debugging on, on a TV at `<tv-ip>`:
+
+```bash
+gh release download --repo jeremykenedy/aquarium-live --pattern 'aquarium-live.apk*'
+shasum -a 256 -c aquarium-live.apk.sha256
+adb connect <tv-ip>:5555
+adb install -r aquarium-live.apk
+adb shell settings put secure screensaver_components com.jeremykenedy.aquariumlive/.AquariumDream
+```
+
+Then open **Aquarium Live** on the TV to choose a scene and look. The full walkthrough, including how to put your old screensaver back, is in [Installation](docs/INSTALLATION.md).
 
 ## Features
 
@@ -104,7 +126,7 @@ Whales don't stay: one swims through every so often, far in the background, then
 
 ## Settings
 
-Open **Aquarium Live** from the apps on your TV, or run `adb shell am start -n com.jeremykenedy.aquariumlive/.SettingsActivity`. Every setting applies the next time the screensaver starts; **Preview** shows it straight away.
+Open **Aquarium Live** from the apps on your TV, or run `adb shell am start -n com.jeremykenedy.aquariumlive/.SettingsActivity`. Every setting applies the next time the screensaver starts; **Preview** shows it straight away. Each setting is explained in [Configuration](docs/CONFIGURATION.md).
 
 <p align="center">
     <img src="docs/screenshots/settings.png" alt="Aquarium Live settings screen" width="640">
@@ -161,9 +183,11 @@ Tested on:
 | Fire TV Edition TV (AFTDEC012E) | 11 (API 30) | Settings, preview, every scene and look, screensaver started and woken from the remote |
 | Google TV emulator | 14 (API 34) | Install, launcher entry, settings with the remote, Surprise me and Random, preview, screensaver started on its own after the idle timeout |
 | Android TV emulator | 12 (API 31) | Install, launcher entry, screensaver started on its own after the idle timeout |
+| Android emulator | 5.1.1 (API 22) | Install, settings, preview at a fixed 1080p resolution, screensaver started |
 
 Physical Android TV and Google TV devices have not been tested yet.
 
+## Requirements
 
 - A Fire TV, Android TV or Google TV with ADB debugging turned on in its developer options. For a Fire TV, the steps with screenshots are in [Putting your Fire TV in developer mode](https://github.com/jeremykenedy/amazon-fire-tv-fixes#putting-your-fire-tv-in-developer-mode).
 - [adb](https://developer.android.com/tools/adb) on a computer on the same network
@@ -171,19 +195,25 @@ Physical Android TV and Google TV devices have not been tested yet.
 
 ## Installation
 
-1. Connect to the TV over the network, using your TV's IP address:
+1. Download `aquarium-live.apk` and `aquarium-live.apk.sha256` from the [latest release](https://github.com/jeremykenedy/aquarium-live/releases/latest) and check the APK. It should print `aquarium-live.apk: OK`:
+
+    ```bash
+    shasum -a 256 -c aquarium-live.apk.sha256
+    ```
+
+2. Connect to the TV over the network, using your TV's IP address:
 
     ```bash
     adb connect <tv-ip>:5555
     ```
 
-2. Install the APK:
+3. Install the APK:
 
     ```bash
     adb install aquarium-live.apk
     ```
 
-3. Open **Aquarium Live** to choose your settings and preview them.
+4. Open **Aquarium Live** to choose your settings and preview them.
 
 ## Setting it as the screensaver
 
@@ -199,7 +229,7 @@ Then set Aquarium Live as the screensaver over adb. This works the same way on F
 adb shell settings put secure screensaver_components com.jeremykenedy.aquariumlive/.AquariumDream
 ```
 
-On a Fire TV, to see it right away instead of waiting for the TV to go idle:
+To see it right away instead of waiting for the TV to go idle (this worked on the Fire TV and on Android 5.1; on the Google TV 14 emulator the screensaver started once the TV had been idle instead):
 
 ```bash
 adb shell am start -n com.android.systemui/.Somnambulator
@@ -207,29 +237,9 @@ adb shell am start -n com.android.systemui/.Somnambulator
 
 Press any button on the remote to wake the TV.
 
-## Building from source
+## Updating
 
-```bash
-./build.sh
-```
-
-This builds and signs `build/aquarium-live.apk` with only the JDK and the Android SDK build tools. There is no Gradle. The first build creates a signing key in `~/.android/aquarium-live.jks`; keep it backed up, because the TV only accepts updates signed with the same key. `DEBUG=1 ./build.sh` makes a debuggable build for testing on a device.
-
-## How it works
-
-- **Drawn in real time.** Each fish, coral, plant and creature is painted by the app when it starts, from shapes described in code, then animated on the GPU with OpenGL ES. Fish bend their tails as they swim, whales and dolphins kick their flukes, manta rays flap, turtles row with their flippers, octopuses curl their arms and jellyfish pulse.
-- **Behaviour.** Fish wander, rest and turn around, schools hold together and move as one, small fish keep clear of sharks and dolphins, crabs scuttle, octopuses crawl and sometimes swim, seahorses hover near plants, and whales pass through from time to time.
-- **Fast start.** The painted art is saved on the TV after the first run, so later starts load it instead of painting it again. The water appears at once and each creature fades in as its art is ready.
-- **Resolution.** On the Fire TV Edition TV this was built on (model AFTDEC012E), apps draw on a 1920x1080 graphics layer that the TV scales up to its 4K panel; only video playback reaches the panel at full 4K. Automatic resolution draws at the size the TV actually shows, which keeps motion smooth. Higher resolutions are in the settings for TVs that compose apps at 4K.
-- **Frame rate.** Automatic starts at 60 frames per second and settles on a steady 30 if the TV cannot keep up, because even 30 looks smoother than a rate that keeps changing. On the AFTDEC012E the default scene runs at a steady 30.
-
-## Testing
-
-```bash
-./test.sh
-```
-
-Runs the plain-JVM tests for the simulation, the settings parsing and the shading maths: fish counts and schools for every scene and setting, sea-life toggles, everything staying inside the tank over 20 simulated minutes, whales coming and going, schools holding together, and fish turning around. `./coverage.sh` runs the same tests under JaCoCo and writes `build/jacoco.xml`.
+Download the new release, check its checksum, and install it over the old one with `adb install -r aquarium-live.apk`. Your settings are kept. Releases are always signed with the same key; an APK you build and sign yourself cannot update a released install (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`) until the released one is uninstalled.
 
 ## Uninstalling
 
@@ -247,6 +257,62 @@ The stock values on the devices this was tested on:
 | Fire TV | `com.amazon.ftv.screensaver/.app.services.ScreensaverService` |
 | Google TV 14 emulator | `com.google.android.apps.tv.dreamx/.service.Backdrop` |
 | Android TV 12 emulator | `com.google.android.backdrop/.Backdrop` |
+
+## Troubleshooting
+
+- **The screensaver never starts:** check `adb shell settings get secure screensaver_components` prints `com.jeremykenedy.aquariumlive/.AquariumDream`, and that `adb shell settings get global stay_on_while_plugged_in` is `0`; when it is not, the TV never goes idle.
+- **It takes a few seconds to appear the first time:** the art is painted on the TV and then saved, so later starts are quicker.
+- **A setting is greyed out:** Surprise me is on and is choosing it.
+- **It does not look 4K:** see [Resolution](docs/ARCHITECTURE.md#resolution).
+
+More in [Troubleshooting](docs/TROUBLESHOOTING.md).
+
+## How it works
+
+- **Drawn in real time.** Each fish, coral, plant and creature is painted by the app when it starts, from shapes described in code, then animated on the GPU with OpenGL ES. Fish bend their tails as they swim, whales and dolphins kick their flukes, manta rays flap, turtles row with their flippers, octopuses curl their arms and jellyfish pulse.
+- **Behaviour.** Fish wander, rest and turn around, schools hold together and move as one, small fish keep clear of sharks and dolphins, crabs scuttle, octopuses crawl and sometimes swim, seahorses hover near plants, and whales pass through from time to time.
+- **Fast start.** The painted art is saved on the TV after the first run, so later starts load it instead of painting it again. The water appears at once and each creature fades in as its art is ready.
+- **Resolution.** On the Fire TV Edition TV this was built on (model AFTDEC012E), apps draw on a 1920x1080 graphics layer that the TV scales up to its 4K panel; only video playback reaches the panel at full 4K. Automatic resolution draws at the size the TV actually shows, which keeps motion smooth. Higher resolutions are in the settings for TVs that compose apps at 4K.
+- **Frame rate.** Automatic starts at 60 frames per second and settles on a steady 30 if the TV cannot keep up, because even 30 looks smoother than a rate that keeps changing. On the AFTDEC012E the default scene runs at a steady 30.
+
+The details, file by file, are in [Architecture](docs/ARCHITECTURE.md).
+
+## Building from source
+
+```bash
+./build.sh
+```
+
+This builds and signs `build/aquarium-live.apk` with only the JDK and the Android SDK build tools. There is no Gradle. The first build creates a signing key in `~/.android/aquarium-live.jks`; keep it backed up, because the TV only accepts updates signed with the same key. `DEBUG=1 ./build.sh` makes a debuggable build for testing on a device. See [Building](docs/BUILDING.md) for the requirements and each step, and [Releasing](docs/RELEASING.md) for publishing a release.
+
+## Testing
+
+```bash
+./test.sh
+```
+
+Runs the plain-JVM tests for the simulation, the settings parsing and the shading maths: fish counts and schools for every scene and setting, sea-life toggles, everything staying inside the tank over 20 simulated minutes, whales coming and going, schools holding together, and fish turning around. `./coverage.sh` runs the same tests under JaCoCo and writes `build/jacoco.xml`. The painting, the renderer and the Android components are checked on devices; see [Testing](docs/TESTING.md) for what is covered and how each device was checked.
+
+## Continuous integration
+
+Every push to `main` and every pull request runs the tests on Java 17 and 21, builds the APK and fails it if it requests any permission, scans for secrets with GitGuardian, and sends code and coverage to SonarCloud. The GitGuardian and SonarCloud steps need the `GITGUARDIAN_API_KEY` and `SONAR_TOKEN` repository secrets and skip with a notice until those are set. See [CI](docs/CI.md) for the workflows and the secrets.
+
+## Documentation
+
+| Guide | Covers |
+|-------|--------|
+| [Installation](docs/INSTALLATION.md) | Downloading and checking a release, installing, setting the screensaver, updating, uninstalling |
+| [Configuration](docs/CONFIGURATION.md) | Every setting, Random and Surprise me, sea-life numbers, recipes |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | When it does not start, install errors, smoothness, brightness |
+| [Architecture](docs/ARCHITECTURE.md) | How the simulation, art, rendering and frame pacing work |
+| [Building](docs/BUILDING.md) | Building and signing the APK without Gradle |
+| [Testing](docs/TESTING.md) | The automated tests, coverage and device testing |
+| [Releasing](docs/RELEASING.md) | Publishing a release with its checksum |
+| [CI](docs/CI.md) | The GitHub Actions workflows and their secrets |
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
