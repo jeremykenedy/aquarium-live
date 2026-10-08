@@ -361,7 +361,7 @@ final class CreatureArt {
         p.setShader(null);
         c.save();
         c.clipPath(arm);
-        for (float y = h - 14; y > 20; y -= 18f * (0.4f + 0.6f * y / h)) {
+        for (float y = h - 14f; y > 20; y -= 18f * (0.4f + 0.6f * y / h)) {
             float t = y / h;
             float rr = 2.5f + 6f * t;
             float x = 32 + 18f * t;
@@ -375,12 +375,12 @@ final class CreatureArt {
 
     private void jellyBell() {
         Path bell = new Path();
-        bell.moveTo(16, h - 12);
+        bell.moveTo(16, h - 12f);
         bell.cubicTo(20, 60, 140, 14, 256, 14);
-        bell.cubicTo(372, 14, 492, 60, 496, h - 12);
+        bell.cubicTo(372, 14, 492, 60, 496, h - 12f);
         for (int i = 0; i <= 16; i++) {
             float x = 496 - i * (480f / 16f);
-            bell.quadTo(x + 15, h + 2, x, h - 12);
+            bell.quadTo(x + 15, h + 2f, x, h - 12f);
         }
         bell.close();
         p.setColor(0xFFFFFFFF);
@@ -391,7 +391,7 @@ final class CreatureArt {
         c.clipPath(bell);
         p.setColor(0x709C5FD1);
         for (int i = 0; i < 4; i++) {
-            float x = 120 + i * 90;
+            float x = 120 + i * 90f;
             c.drawOval(new RectF(x - 36, 120, x + 36, 175), p);
         }
         p.setColor(0x30FFFFFF);
@@ -412,7 +412,7 @@ final class CreatureArt {
         c.drawLine(16, h, 16, 0, p);
         p.setShader(null);
         p.setStyle(Paint.Style.FILL);
-        for (float y = h - 20; y > 40; y -= 26) {
+        for (float y = h - 20f; y > 40; y -= 26) {
             p.setColor((int) (0x60 * y / h) << 24 | 0xFFFFFF);
             c.drawCircle(16, y, 3f, p);
         }
@@ -520,9 +520,9 @@ final class CreatureArt {
         p.setColor(0xFFE8590C);
         for (int i = 0; i < 4; i++) {
             Path spike = new Path();
-            float bx = 112 + i * 9;
+            float bx = 112 + i * 9f;
             spike.moveTo(bx, 50);
-            spike.lineTo(bx + 4, 30 - (i % 2) * 6);
+            spike.lineTo(bx + 4, 30 - (i % 2) * 6f);
             spike.lineTo(bx + 8, 50);
             spike.close();
             c.drawPath(spike, p);
@@ -551,12 +551,12 @@ final class CreatureArt {
         p.setColor(dark);
         for (int s = -1; s <= 1; s += 2) {
             for (int i = 0; i < 4; i++) {
-                float bx = 256 + s * (70 + i * 18);
-                float by = 150 + i * 6;
-                float kx = 256 + s * (120 + i * 30);
-                float ky = 165 + i * 4;
-                float fx = 256 + s * (140 + i * 30);
-                float fy = h - 6;
+                float bx = 256 + s * (70 + i * 18f);
+                float by = 150 + i * 6f;
+                float kx = 256 + s * (120 + i * 30f);
+                float ky = 165 + i * 4f;
+                float fx = 256 + s * (140 + i * 30f);
+                float fy = h - 6f;
                 p.setStrokeWidth(13f - i);
                 c.drawLine(bx, by, kx, ky - 20, p);
                 p.setStrokeWidth(10f - i);
@@ -565,13 +565,13 @@ final class CreatureArt {
         }
         p.setStrokeWidth(18f);
         for (int s = -1; s <= 1; s += 2) {
-            c.drawLine(256 + s * 100, 120, 256 + s * 160, 80, p);
-            c.drawLine(256 + s * 160, 80, 256 + s * 195, 60, p);
+            c.drawLine(256 + s * 100f, 120, 256 + s * 160f, 80, p);
+            c.drawLine(256 + s * 160f, 80, 256 + s * 195f, 60, p);
         }
         p.setStyle(Paint.Style.FILL);
         for (int s = -1; s <= 1; s += 2) {
             c.save();
-            c.translate(256 + s * 205, 50);
+            c.translate(256 + s * 205f, 50);
             c.rotate(s * -25f);
             p.setColor(0xFFFFFFFF);
             p.setShader(new LinearGradient(0, -40, 0, 40, 0xFFFF6B2C, dark, Shader.TileMode.CLAMP));
@@ -579,15 +579,15 @@ final class CreatureArt {
             p.setShader(null);
             p.setColor(dark);
             Path finger = new Path();
-            finger.moveTo(s * 30, -16);
-            finger.quadTo(s * 70, -30, s * 76, -6);
-            finger.quadTo(s * 56, -12, s * 34, -4);
+            finger.moveTo(s * 30f, -16);
+            finger.quadTo(s * 70f, -30, s * 76f, -6);
+            finger.quadTo(s * 56f, -12, s * 34f, -4);
             finger.close();
             c.drawPath(finger, p);
             Path thumb = new Path();
-            thumb.moveTo(s * 30, 8);
-            thumb.quadTo(s * 66, 16, s * 72, 2);
-            thumb.quadTo(s * 54, 4, s * 32, 0);
+            thumb.moveTo(s * 30f, 8);
+            thumb.quadTo(s * 66f, 16, s * 72f, 2);
+            thumb.quadTo(s * 54f, 4, s * 32f, 0);
             thumb.close();
             c.drawPath(thumb, p);
             p.setColor(0x40FFFFFF);
@@ -612,12 +612,12 @@ final class CreatureArt {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(6f);
             p.setColor(dark);
-            c.drawLine(256 + s * 26, 76, 256 + s * 32, 44, p);
+            c.drawLine(256 + s * 26f, 76, 256 + s * 32f, 44, p);
             p.setStyle(Paint.Style.FILL);
             p.setColor(0xFF111111);
-            c.drawCircle(256 + s * 32, 40, 9f, p);
+            c.drawCircle(256 + s * 32f, 40, 9f, p);
             p.setColor(0xBBFFFFFF);
-            c.drawCircle(256 + s * 30, 37, 3f, p);
+            c.drawCircle(256 + s * 30f, 37, 3f, p);
         }
     }
 
@@ -647,14 +647,14 @@ final class CreatureArt {
         m.postTranslate(0, -6);
         star.transform(m);
         p.setColor(0xFFFFFFFF);
-        p.setShader(new RadialGradient(cx, h - 90, 150, new int[] {0xFFB45AD6, 0xFF7B2D8E, 0xFF4A1657}, new float[] {0f, 0.6f, 1f}, Shader.TileMode.CLAMP));
+        p.setShader(new RadialGradient(cx, h - 90f, 150, new int[] {0xFFB45AD6, 0xFF7B2D8E, 0xFF4A1657}, new float[] {0f, 0.6f, 1f}, Shader.TileMode.CLAMP));
         c.drawPath(star, p);
         p.setShader(null);
         c.save();
         c.clipPath(star);
         for (int i = 0; i < 140; i++) {
             p.setColor(0xA0F3E6F8);
-            c.drawCircle(r(0, w), r(h - 160, h), r(1.5f, 3.6f), p);
+            c.drawCircle(r(0, w), r(h - 160f, h), r(1.5f, 3.6f), p);
         }
         c.restore();
     }

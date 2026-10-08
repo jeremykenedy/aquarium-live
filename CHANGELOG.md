@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- 100% line and branch coverage of every class that runs on a plain JVM. The render size, the automatic frame rate and the art cache clean-up moved out of the Android classes so they are tested.
+- Fixed the SonarCloud reliability findings: whole-number arithmetic passed where decimals are expected, and unchecked file deletes.
+- New Code style, Documentation and Security workflows and a Scrutinizer configuration. Every action is pinned to a commit.
+
 ## 1.0.1
 
 ### Fixed

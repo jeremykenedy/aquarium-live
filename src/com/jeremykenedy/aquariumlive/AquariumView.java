@@ -58,7 +58,8 @@ final class AquariumView extends FrameLayout {
         renderer = new AquariumRenderer(cfg, gles3, artCache(context), "v" + installStamp(context) + "-");
         gl.setRenderer(renderer);
         gl.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        int[] size = renderSize(context, cfg.resolution == 0 && cfg.style == Config.Style.RETRO ? 540 : cfg.resolution);
+        int[] screen = screenSize(context);
+        int[] size = cfg.renderSize(screen[0], screen[1]);
         if (size != null) {
             gl.getHolder().setFixedSize(size[0], size[1]);
         }
@@ -86,15 +87,7 @@ final class AquariumView extends FrameLayout {
     private static java.io.File artCache(Context context) {
         java.io.File dir = new java.io.File(context.getCacheDir(), "art");
         dir.mkdirs();
-        String keep = "v" + installStamp(context) + "-";
-        java.io.File[] files = dir.listFiles();
-        if (files != null) {
-            for (java.io.File f : files) {
-                if (!f.getName().startsWith(keep)) {
-                    f.delete();
-                }
-            }
-        }
+        ArtCache.prune(dir, "v" + installStamp(context) + "-");
         return dir;
     }
 
@@ -110,37 +103,17 @@ final class AquariumView extends FrameLayout {
         return Config.fromMap(PreferenceManager.getDefaultSharedPreferences(context).getAll());
     }
 
-    /**
-     * Render size for the chosen resolution, or null to use the window's own
-     * size. Automatic (0) uses the window, which is the size the TV actually
-     * composes app graphics at; a Fire TV 4K draws apps at 1920x1080 and
-     * scales them to the panel, so rendering larger there only costs speed.
-     */
-    private static int[] renderSize(Context context, int resolution) {
-        if (resolution == 0) {
-            return null;
-        }
+    /** The screen's physical size in pixels. Display.Mode only exists from Android 6.0, so older versions use the real display size. */
+    private static int[] screenSize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        int w;
-        int h;
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             Display.Mode mode = display.getMode();
-            w = mode.getPhysicalWidth();
-            h = mode.getPhysicalHeight();
-        } else {
-            android.graphics.Point real = new android.graphics.Point();
-            display.getRealSize(real);
-            w = real.x;
-            h = real.y;
+            return new int[] {mode.getPhysicalWidth(), mode.getPhysicalHeight()};
         }
-        int pw = Math.max(w, h);
-        int ph = Math.min(w, h);
-        if (pw <= 0 || ph <= 0) {
-            return null;
-        }
-        int targetH = Math.min(resolution, ph);
-        return new int[] {Math.round(targetH * pw / (float) ph), targetH};
+        android.graphics.Point real = new android.graphics.Point();
+        display.getRealSize(real);
+        return new int[] {real.x, real.y};
     }
 
     private void placeClock() {

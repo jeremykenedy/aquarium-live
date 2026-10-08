@@ -24,7 +24,11 @@ The tests run on a plain JVM, with no Android device or emulator. They cover the
 | Layout | Plant counts follow Plants and coral; front plants keep to the edges so they do not hide the fish |
 | Bubbles | Bubbles pop at the surface; none when Bubbles is Off |
 | Repeatability | The same seed builds the same tank |
-| Shading | Cel bands and palette reduction for the stylised looks |
+| Shading | Cel bands and palette reduction for the stylised looks, including no bands and brightness above every band |
+| Render size | Automatic uses the window; Retro draws 540 lines; fixed choices keep the screen's shape and are capped at its height; tall or unknown screens |
+| Frame rate | Fixed 30 and 60; automatic stays at 60 when frames keep up and drops to a steady 30 when they do not; the warm-up and zero-length frames are ignored; restart |
+| Art cache | Old art is deleted and current art kept; a missing folder or an undeletable file does not fail |
+| Edge cases | Every scene has solo and schooling fish; no specks; zero and negative time steps; seahorses with no plants; two airstones on very wide screens; fish on top of each other or on a shark; a lifted octopus; an empty tank; airstone-only bubbles; whales at every amount |
 
 ## Coverage
 
@@ -34,18 +38,20 @@ The tests run on a plain JVM, with no Android device or emulator. They cover the
 
 Runs the same tests under JaCoCo and writes `build/jacoco.xml` (for SonarCloud) and `build/jacoco.csv`. The first run downloads the JaCoCo agent and CLI from Maven Central into `build/jacoco/`.
 
-Line coverage of the tested classes:
+Every class that can run on a plain JVM is covered in full:
 
-| Class | Lines covered |
-|-------|---------------|
-| `Config` | 98% |
-| `Sim` | 99% |
-| `Species` | 96% |
-| `Tone` | 94% |
+| Class | Lines | Branches |
+|-------|-------|----------|
+| `Config` | 100% | 100% |
+| `Sim` | 100% | 100% |
+| `Species` | 100% | 100% |
+| `Tone` | 100% | 100% |
+| `FramePacer` | 100% | 100% |
+| `ArtCache` | 100% | 100% |
 
 ## What the tests do not cover
 
-The painting (`FishArt`, `CreatureArt`, `PlantArt`, `ArtStyle`, `Textures`), the OpenGL renderer and the Android components need an Android device, so they are checked on devices instead.
+The other classes call Android: the painting (`FishArt`, `CreatureArt`, `PlantArt`, `ArtStyle`, `Textures`), the OpenGL renderer (`AquariumRenderer`, `Gl`) and the Android components (`AquariumView`, `AquariumDream`, `SettingsActivity`, `PreviewActivity`). They cannot run on a plain JVM, so they are listed in `sonar.coverage.exclusions` in `sonar-project.properties` and checked on devices instead. Logic that does not need Android is kept out of them so it can be tested: the render size lives in `Config`, the frame-rate switch in `FramePacer`, and the cache clean-up in `ArtCache`.
 
 ## Device testing
 

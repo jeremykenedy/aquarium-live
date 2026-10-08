@@ -374,9 +374,7 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
     private float[] pointData = new float[0];
     private FloatBuffer pointBuffer;
 
-    private volatile boolean halfRate;
-    private int paceFrames;
-    private float paceSeconds;
+    private final FramePacer pacer;
     private long lastNanos;
     private double time;
     private float fade;
@@ -392,6 +390,7 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         this.instancing = instancing;
         this.cacheDir = cacheDir;
         this.cachePrefix = cachePrefix + cfg.style.name().toLowerCase(java.util.Locale.ROOT) + "-";
+        this.pacer = new FramePacer(cfg.fps);
         styleScene();
     }
 
@@ -435,8 +434,7 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         textures.put("bubble", Gl.texture(Textures.bubble(), false, nearest));
         textures.put("floor", Gl.texture(Textures.floor(cfg.theme), true, nearest));
         EGL14.eglSwapInterval(EGL14.eglGetCurrentDisplay(), 1);
-        paceFrames = 0;
-        paceSeconds = 0f;
+        pacer.restart();
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         GLES20.glDisable(GLES20.GL_CULL_FACE);
         GLES20.glDisable(GLES20.GL_DITHER);
@@ -501,11 +499,11 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         try (java.io.FileOutputStream out = new java.io.FileOutputStream(tmp)) {
             made.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
         } catch (java.io.IOException e) {
-            tmp.delete();
+            ArtCache.discard(tmp);
             return made;
         }
         if (!tmp.renameTo(file)) {
-            tmp.delete();
+            ArtCache.discard(tmp);
         }
         return made;
     }
@@ -614,7 +612,7 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
         float dt = lastNanos == 0 ? 0f : Math.min(0.1f, (now - lastNanos) / 1e9f);
         lastNanos = now;
         time += dt;
-        pace(dt);
+        pacer.frame(time, dt);
         fade = Math.min(1f, fade + dt / 1.6f);
         sim.update(dt);
         updateTint(dt);
@@ -658,28 +656,7 @@ final class AquariumRenderer implements GLSurfaceView.Renderer {
 
     /** True when frames should be drawn on every other display refresh (30 a second). */
     boolean halfRate() {
-        return halfRate || cfg.fps == 30;
-    }
-
-    /**
-     * Automatic frame rate: after a few seconds at 60, drop to a steady 30 if
-     * frames are not keeping up. Uneven 60/30 pacing looks worse than 30.
-     * The first seconds are skipped because art is still being uploaded.
-     */
-    private void pace(float dt) {
-        if (cfg.fps != 0 || halfRate || dt <= 0f || time < 3.0) {
-            return;
-        }
-        paceFrames++;
-        paceSeconds += dt;
-        if (paceSeconds < 4f) {
-            return;
-        }
-        if (paceFrames / paceSeconds < 54f) {
-            halfRate = true;
-        }
-        paceFrames = 0;
-        paceSeconds = 0f;
+        return pacer.halfRate();
     }
 
     private void updateTint(float dt) {

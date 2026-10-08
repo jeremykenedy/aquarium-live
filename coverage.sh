@@ -12,7 +12,7 @@ mkdir -p "$TOOLS" "$CLASSES"
 [[ -f "$TOOLS/agent.jar" ]] || curl -fsSL -o "$TOOLS/agent.jar" "$MAVEN/org.jacoco.agent/$JACOCO_VERSION/org.jacoco.agent-$JACOCO_VERSION-runtime.jar"
 [[ -f "$TOOLS/cli.jar" ]] || curl -fsSL -o "$TOOLS/cli.jar" "$MAVEN/org.jacoco.cli/$JACOCO_VERSION/org.jacoco.cli-$JACOCO_VERSION-nodeps.jar"
 
-javac -nowarn -d "$CLASSES" "$HERE/src/$PKG/Config.java" "$HERE/src/$PKG/Species.java" "$HERE/src/$PKG/Sim.java" "$HERE/src/$PKG/Tone.java" "$HERE/test/$PKG/SimTest.java"
+javac -nowarn -d "$CLASSES" "$HERE/src/$PKG/Config.java" "$HERE/src/$PKG/Species.java" "$HERE/src/$PKG/Sim.java" "$HERE/src/$PKG/Tone.java" "$HERE/src/$PKG/ArtCache.java" "$HERE/src/$PKG/FramePacer.java" "$HERE/test/$PKG/SimTest.java"
 java -javaagent:"$TOOLS/agent.jar=destfile=$HERE/build/jacoco.exec" -cp "$CLASSES" com.jeremykenedy.aquariumlive.SimTest
 java -jar "$TOOLS/cli.jar" report "$HERE/build/jacoco.exec" \
   --classfiles "$CLASSES" --sourcefiles "$HERE/src" --xml "$HERE/build/jacoco.xml" --csv "$HERE/build/jacoco.csv" >/dev/null

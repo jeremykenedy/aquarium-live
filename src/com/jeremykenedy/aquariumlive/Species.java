@@ -203,13 +203,4 @@ public final class Species {
         new Builder("starfish", 80f, 1.2f, OCEAN, REEF, KELP).tex(256, 256).kind(Kind.STARFISH, Motion.CRAWL, CRABS)
                 .tail(0f, 0f, 1f).depth(0.04f, 0.45f).build(),
     };
-
-    public static Species byId(String id) {
-        for (Species s : ALL) {
-            if (s.id.equals(id)) {
-                return s;
-            }
-        }
-        throw new IllegalArgumentException("Unknown species " + id);
-    }
 }

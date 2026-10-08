@@ -9,18 +9,25 @@
 <p align="center">A living aquarium screensaver for Fire TV, Android TV and Google TV. Every fish, plant and coral is drawn by the app in real time: no video, no downloads, no ads, and no tracking or analytics of any kind.</p>
 
 <p align="center">
-    <a href="https://github.com/jeremykenedy/aquarium-live/releases/latest"><img src="https://img.shields.io/github/v/release/jeremykenedy/aquarium-live" alt="Latest release"></a>
-    <a href="https://github.com/jeremykenedy/aquarium-live/releases"><img src="https://img.shields.io/github/downloads/jeremykenedy/aquarium-live/total" alt="Downloads"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/releases/latest"><img src="https://img.shields.io/github/v/release/jeremykenedy/aquarium-live?label=Release" alt="Latest release"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/releases"><img src="https://img.shields.io/github/downloads/jeremykenedy/aquarium-live/total?label=Downloads" alt="Total release downloads"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/style.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/style.yml/badge.svg" alt="Code style"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/docs.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/docs.yml/badge.svg" alt="Documentation"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/security.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/security.yml/badge.svg" alt="Security"></a>
     <a href="https://dashboard.gitguardian.com/"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/gitguardian.yml/badge.svg" alt="GitGuardian scan"></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&metric=alert_status" alt="Quality Gate Status"></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&metric=coverage" alt="Coverage"></a>
+    <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/sonarcloud.yml/badge.svg" alt="SonarQube Cloud scan"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=alert_status" alt="Quality Gate Status"></a>
+    <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=coverage" alt="Coverage"></a>
+    <a href="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/build-status/main"><img src="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/badges/build.png?b=main" alt="Scrutinizer Build Status"></a>
+    <a href="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/?branch=main"><img src="https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/badges/quality-score.png?b=main" alt="Scrutinizer Code Quality"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
 <p align="center">
     <a href="https://github.com/jeremykenedy"><img src="https://img.shields.io/github/followers/jeremykenedy?label=Follow%20me&amp;style=social" alt="Follow me on GitHub"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live" title="Open the repository and click Star"><img src="https://img.shields.io/badge/Star-this%20repo-yellow?logo=github&amp;style=social" alt="Star this repo"></a>
+    <a href="https://github.com/sponsors/jeremykenedy" title="Sponsor jeremykenedy"><img src="https://img.shields.io/github/sponsors/jeremykenedy?label=Sponsor&amp;logo=GitHub&amp;style=social" alt="Sponsor jeremykenedy"></a>
 </p>
 
 <p align="center">
@@ -291,11 +298,11 @@ This builds and signs `build/aquarium-live.apk` with only the JDK and the Androi
 ./test.sh
 ```
 
-Runs the plain-JVM tests for the simulation, the settings parsing and the shading maths: fish counts and schools for every scene and setting, sea-life toggles, everything staying inside the tank over 20 simulated minutes, whales coming and going, schools holding together, and fish turning around. `./coverage.sh` runs the same tests under JaCoCo and writes `build/jacoco.xml`. The painting, the renderer and the Android components are checked on devices; see [Testing](docs/TESTING.md) for what is covered and how each device was checked.
+Runs the plain-JVM tests for the simulation, the settings parsing and the shading maths: fish counts and schools for every scene and setting, sea-life toggles, everything staying inside the tank over 20 simulated minutes, whales coming and going, schools holding together, and fish turning around. `./coverage.sh` runs the same tests under JaCoCo and writes `build/jacoco.xml`. Every class that can run on a plain JVM has 100% line and branch coverage. The painting, the renderer and the Android components need a device, so they are checked on devices and left out of the coverage measure; see [Testing](docs/TESTING.md) for what is covered and how each device was checked.
 
 ## Continuous integration
 
-Every push to `main` and every pull request runs the tests on Java 17 and 21, builds the APK and fails it if it requests any permission, scans for secrets with GitGuardian, and sends code and coverage to SonarCloud. The GitGuardian and SonarCloud steps need the `GITGUARDIAN_API_KEY` and `SONAR_TOKEN` repository secrets and skip with a notice until those are set. See [CI](docs/CI.md) for the workflows and the secrets.
+Every push to `main` and every pull request runs six workflows: the tests on Java 17 and 21 and an APK build that fails if it requests any permission; code style; the documentation checks; a security check of the manifest and a gitleaks secret scan of the files and history; a GitGuardian scan; and a SonarCloud analysis with coverage. Scrutinizer builds and analyzes each push once the repository is added on scrutinizer-ci.com. See [CI](docs/CI.md) for what each one checks and the secrets they need.
 
 ## Documentation
 

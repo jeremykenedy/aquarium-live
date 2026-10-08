@@ -363,9 +363,6 @@ public final class Sim {
                 solo.add(s);
             }
         }
-        if (solo.isEmpty()) {
-            return;
-        }
         int total = cfg.fishCount;
         int cap = Math.max(2, (total + solo.size() - 1) / solo.size() + 1);
         int[] picked = new int[solo.size()];
@@ -389,9 +386,6 @@ public final class Sim {
             if (s.schooling && s.livesIn(cfg.theme)) {
                 schoolers.add(s);
             }
-        }
-        if (schoolers.isEmpty()) {
-            return;
         }
         int[] sizes = schoolSizes(cfg.schools);
         for (int g = 0; g < sizes.length; g++) {
@@ -498,6 +492,11 @@ public final class Sim {
         return near.get(rnd.nextInt(near.size())).x + (rnd.nextFloat() - 0.5f) * 80f;
     }
 
+    /** Velocity along one axis toward a target d away on that axis and dist away in all, at speed want; zero once there. */
+    static float toward(float d, float dist, float want) {
+        return dist > 0.01f ? d / dist * want : 0f;
+    }
+
     private void faceToward(Creature c, float targetX) {
         c.faceAngle = targetX >= c.x ? 0f : (float) Math.PI;
         c.face = (float) Math.cos(c.faceAngle);
@@ -510,20 +509,15 @@ public final class Sim {
                 sum += list.get(i).weight;
             }
         }
-        if (sum == 0) {
-            return rnd.nextInt(list.size());
-        }
         int roll = rnd.nextInt(sum);
-        for (int i = 0; i < list.size(); i++) {
-            if (picked[i] >= cap) {
-                continue;
-            }
-            roll -= list.get(i).weight;
-            if (roll < 0) {
-                return i;
+        int i = -1;
+        while (roll >= 0) {
+            i++;
+            if (picked[i] < cap) {
+                roll -= list.get(i).weight;
             }
         }
-        return list.size() - 1;
+        return i;
     }
 
     private float[] placeAirstones() {
@@ -658,8 +652,8 @@ public final class Sim {
         }
         float speed = s.species.speed * cfg.speed * scale(s.z) * 0.85f;
         float want = Math.min(speed, dist * 0.6f);
-        float dvx = dist > 0f ? dx / dist * want : 0f;
-        float dvy = dist > 0f ? dy / dist * want * 0.5f : 0f;
+        float dvx = toward(dx, dist, want);
+        float dvy = toward(dy, dist, want) * 0.5f;
         float k = Math.min(1f, dt * 0.6f);
         s.vx += (dvx - s.vx) * k;
         s.vy += (dvy - s.vy) * k;
@@ -700,8 +694,8 @@ public final class Sim {
         float dy = f.ty - f.y;
         float dist = (float) Math.hypot(dx, dy);
         float want = Math.min(maxSpeed, dist * 0.9f);
-        float dvx = dist > 0.01f ? dx / dist * want : 0f;
-        float dvy = dist > 0.01f ? dy / dist * want * 0.6f : 0f;
+        float dvx = toward(dx, dist, want);
+        float dvy = toward(dy, dist, want) * 0.6f;
 
         if (f.isFish()) {
             // Keep a little room from neighbours swimming at a similar depth.

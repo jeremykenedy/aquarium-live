@@ -36,6 +36,19 @@ public final class SimTest {
         sameSeedSameTank();
         toneBands();
         toneQuantize();
+        everySceneHasSoloAndSchoolingFish();
+        tintCoversEveryHour();
+        configRejectsOutOfRangeNumbers();
+        renderSizeFollowsResolution();
+        toneEdgeCases();
+        framePacerSettlesOnThirty();
+        artCachePrunesOldArt();
+        simEdgeCases();
+        steeringHandlesArrival();
+        crowdedAndCaughtFishStayFinite();
+        liftedOctopusSwimsFaster();
+        strayBubblesNeedCreatures();
+        whalesVisitAtEveryAmount();
         System.out.println(passed + " passed, " + failed + " failed");
         if (failed > 0) {
             System.exit(1);
@@ -302,6 +315,315 @@ public final class SimTest {
         check("specks on parsed", Config.fromMap(m).particles);
         m.put(Config.PARTICLES, "sometimes");
         check("specks garbage falls back to on", Config.fromMap(m).particles);
+    }
+
+    static void everySceneHasSoloAndSchoolingFish() {
+        for (Config.Theme theme : Config.Theme.values()) {
+            boolean solo = false;
+            boolean schooling = false;
+            for (Species sp : Species.ALL) {
+                if (sp.kind == Species.Kind.FISH && sp.livesIn(theme)) {
+                    if (sp.schooling) {
+                        schooling = true;
+                    } else {
+                        solo = true;
+                        check(sp.id + " can be picked", sp.weight > 0);
+                    }
+                }
+            }
+            check(theme + " has solo fish", solo);
+            check(theme + " has a schooling fish", schooling);
+        }
+    }
+
+    static void tintCoversEveryHour() {
+        check("fixed evening", same(Config.tint(Config.Lighting.EVENING, 3f), Config.EVENING_TINT));
+        check("fixed day", same(Config.tint(Config.Lighting.DAY, 23f), Config.DAY_TINT));
+        float[] dusk = Config.tint(Config.Lighting.AUTO, 18f);
+        check("18:00 sits between day and evening", dusk[2] < Config.DAY_TINT[2] && dusk[2] > Config.EVENING_TINT[2]);
+        float[] late = Config.tint(Config.Lighting.AUTO, 20f);
+        check("20:00 sits between evening and night", late[0] < Config.EVENING_TINT[0] && late[0] > Config.NIGHT_TINT[0]);
+        check("21:30 is night", same(Config.tint(Config.Lighting.AUTO, 21.5f), Config.NIGHT_TINT));
+        check("5:00 is night", same(Config.tint(Config.Lighting.AUTO, 5f), Config.NIGHT_TINT));
+        check("8:00 is day", same(Config.tint(Config.Lighting.AUTO, 8f), Config.DAY_TINT));
+        check("hours wrap past midnight", same(Config.tint(Config.Lighting.AUTO, 36f), Config.DAY_TINT));
+        check("negative hours wrap", same(Config.tint(Config.Lighting.AUTO, -12f), Config.DAY_TINT));
+        float prev = Config.tint(Config.Lighting.AUTO, 0f)[0];
+        boolean smooth = true;
+        for (int i = 1; i <= 24 * 60; i++) {
+            float now = Config.tint(Config.Lighting.AUTO, i / 60f)[0];
+            smooth &= Math.abs(now - prev) < 0.01f;
+            prev = now;
+        }
+        check("follow the clock never jumps from one minute to the next", smooth);
+    }
+
+    static void configRejectsOutOfRangeNumbers() {
+        Map<String, Object> m = new HashMap<>();
+        m.put(Config.FISH_COUNT, "lots");
+        m.put(Config.SPEED, "0.1");
+        m.put(Config.PLANTS, "9");
+        Config c = Config.fromMap(m);
+        check("a word where a number belongs falls back", c.fishCount == 20);
+        check("speed below the range falls back", c.speed == 1f);
+        check("density above the range falls back", c.plantDensity == 1f);
+    }
+
+    static void renderSizeFollowsResolution() {
+        Config c = new Config();
+        check("automatic draws at the window size", c.renderSize(3840, 2160) == null);
+        c.style = Config.Style.RETRO;
+        int[] retro = c.renderSize(1920, 1080);
+        check("retro on automatic draws 960x540", retro != null && retro[0] == 960 && retro[1] == 540);
+        c.style = Config.Style.REALISTIC;
+        c.resolution = 1080;
+        int[] hd = c.renderSize(3840, 2160);
+        check("1080p on a 4K screen is 1920x1080", hd != null && hd[0] == 1920 && hd[1] == 1080);
+        int[] portrait = c.renderSize(2160, 3840);
+        check("a screen reported tall is treated as wide", portrait != null && portrait[0] == 1920 && portrait[1] == 1080);
+        c.resolution = 2160;
+        int[] capped = c.renderSize(1920, 1080);
+        check("4K on a 1080p screen is capped at 1080", capped != null && capped[0] == 1920 && capped[1] == 1080);
+        int[] wide = c.renderSize(2560, 1080);
+        check("ultra-wide keeps its shape", wide != null && wide[0] == 2560 && wide[1] == 1080);
+        check("an unknown screen size draws at the window size", c.renderSize(0, 0) == null);
+    }
+
+    static void toneEdgeCases() {
+        check("no bands leaves brightness alone", Tone.snap(0.42f, new float[0], 0.05f) == 0.42f);
+        float top = Tone.snap(0.99f, new float[] {0.3f, 0.6f}, 0.01f);
+        check("above every band edge lands in the top band", Math.abs(top - (0.3f + 0.6f) * 0.5f - 0.04f) < 1e-5);
+    }
+
+    private static void runPacer(FramePacer p, double start, double seconds, float dt) {
+        for (double t = start; t < start + seconds; t += dt) {
+            p.frame(t, dt);
+        }
+    }
+
+    static void framePacerSettlesOnThirty() {
+        check("fixed 30 draws every other refresh", new FramePacer(30).halfRate());
+        FramePacer sixty = new FramePacer(60);
+        runPacer(sixty, 0, 20, 1f / 20f);
+        check("fixed 60 never drops to 30, even when slow", !sixty.halfRate());
+        FramePacer smooth = new FramePacer(0);
+        runPacer(smooth, 0, 20, 1f / 60f);
+        check("automatic stays at 60 when frames keep up", !smooth.halfRate());
+        FramePacer slow = new FramePacer(0);
+        runPacer(slow, 0, FramePacer.WARM_UP - 0.1, 1f / 20f);
+        check("slow frames while art loads are ignored", !slow.halfRate());
+        runPacer(slow, FramePacer.WARM_UP, FramePacer.WINDOW + 0.5, 1f / 40f);
+        check("automatic drops to a steady 30 when frames fall behind", slow.halfRate());
+        runPacer(slow, 30, 10, 1f / 60f);
+        check("once at 30 it stays at 30", slow.halfRate());
+        FramePacer idle = new FramePacer(0);
+        for (int i = 0; i < 1000; i++) {
+            idle.frame(10.0, 0f);
+        }
+        check("zero-length frames are ignored", !idle.halfRate());
+        FramePacer restarted = new FramePacer(0);
+        runPacer(restarted, FramePacer.WARM_UP, FramePacer.WINDOW - 0.5, 1f / 40f);
+        restarted.restart();
+        runPacer(restarted, 10, FramePacer.WINDOW - 0.5, 1f / 60f);
+        check("restart throws away the earlier frames", !restarted.halfRate());
+    }
+
+    static void artCachePrunesOldArt() {
+        try {
+            java.io.File dir = java.nio.file.Files.createTempDirectory("aql-art").toFile();
+            java.io.File keep = new java.io.File(dir, "v2-realistic-clownfish.png");
+            java.io.File old = new java.io.File(dir, "v1-realistic-clownfish.png");
+            java.io.File stray = new java.io.File(dir, "other.tmp");
+            for (java.io.File f : new java.io.File[] {keep, old, stray}) {
+                check("made " + f.getName(), f.createNewFile());
+            }
+            ArtCache.prune(dir, "v2-");
+            check("art from this install is kept", keep.isFile());
+            check("art from an older install is removed", !old.exists());
+            check("anything else is removed", !stray.exists());
+            ArtCache.prune(new java.io.File(dir, "missing"), "v2-");
+            check("a missing folder is left alone", dir.isDirectory());
+            java.io.File busy = new java.io.File(dir, "v1-busy");
+            check("made a folder that cannot be deleted directly", busy.mkdir() && new java.io.File(busy, "inner").createNewFile());
+            ArtCache.prune(dir, "v2-");
+            check("a file that cannot be deleted is left for later instead of failing", busy.exists());
+            ArtCache.discard(new java.io.File(busy, "inner"));
+            ArtCache.discard(busy);
+            ArtCache.discard(keep);
+            check("discard removes files", !busy.exists() && !keep.exists());
+            check("temp folder cleaned up", dir.delete());
+        } catch (java.io.IOException e) {
+            check("art cache test could not use the temp folder: " + e.getMessage(), false);
+        }
+    }
+
+    static void simEdgeCases() {
+        Config quiet = new Config();
+        quiet.particles = false;
+        Sim still = new Sim(quiet, 1920f, 3);
+        check("no floating specks when they are off", still.motes.isEmpty());
+        float x = still.creatures.get(0).x;
+        still.update(0f);
+        still.update(-1f);
+        check("a zero or negative step changes nothing", still.creatures.get(0).x == x);
+
+        Config bare = new Config();
+        bare.plantDensity = 0f;
+        bare.seaLife = new java.util.HashSet<>(java.util.Collections.singleton(Species.SEAHORSES));
+        bare.seaLifeAmount = 3;
+        Sim noPlants = new Sim(bare, 1920f, 4);
+        boolean seahorses = false;
+        boolean inside = true;
+        for (Sim.Creature c : noPlants.creatures) {
+            if (c.species.kind == Species.Kind.SEAHORSE) {
+                seahorses = true;
+                inside &= c.x >= 0f && c.x <= 1920f;
+            }
+        }
+        check("seahorses still find a spot with no plants to hover by", seahorses && inside);
+
+        Config tank = new Config();
+        tank.theme = Config.Theme.FISH_TANK;
+        check("a normal screen has one airstone", new Sim(tank, 1920f, 5).airstones.length == 1);
+        Sim wide = new Sim(tank, 3000f, 5);
+        check("a very wide screen has two airstones", wide.airstones.length == 2);
+        check("the two airstones are apart", Math.abs(wide.airstones[0] - wide.airstones[1]) > 600f);
+    }
+
+    static void steeringHandlesArrival() {
+        check("steers toward the target", Sim.toward(30f, 50f, 10f) == 6f);
+        check("stops once there", Sim.toward(0f, 0f, 10f) == 0f);
+        check("stops when close enough", Sim.toward(0.001f, 0.005f, 10f) == 0f);
+    }
+
+    private static boolean finite(Sim sim) {
+        for (Sim.Creature c : sim.creatures) {
+            if (Float.isNaN(c.x) || Float.isNaN(c.y) || Float.isInfinite(c.x) || Float.isInfinite(c.y)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static void crowdedAndCaughtFishStayFinite() {
+        Config c = new Config();
+        c.seaLife = new java.util.HashSet<>(java.util.Collections.singleton(Species.SHARKS));
+        c.seaLifeAmount = 3;
+        Sim sim = new Sim(c, 1920f, 8);
+        Sim.Creature a = null;
+        Sim.Creature b = null;
+        Sim.Creature shark = null;
+        for (Sim.Creature f : sim.creatures) {
+            if (f.species.kind == Species.Kind.SHARK) {
+                shark = f;
+            } else if (f.isFish() && f.school() == null) {
+                if (a == null) {
+                    a = f;
+                } else if (b == null) {
+                    b = f;
+                }
+            }
+        }
+        check("a shark and two fish to test with", a != null && b != null && shark != null);
+        if (a == null || b == null || shark == null) {
+            return;
+        }
+        b.x = a.x;
+        b.y = a.y;
+        b.z = a.z;
+        sim.update(1f / 30f);
+        check("two fish in exactly the same spot stay finite", finite(sim));
+        a.x = shark.x;
+        a.y = shark.y;
+        a.z = shark.z;
+        sim.update(1f / 30f);
+        check("a fish exactly on a shark stays finite", finite(sim));
+    }
+
+    static void liftedOctopusSwimsFaster() {
+        Config c = new Config();
+        c.seaLife = new java.util.HashSet<>(java.util.Collections.singleton(Species.OCTOPUSES));
+        c.seaLifeAmount = 3;
+        Sim sim = new Sim(c, 1920f, 9);
+        Sim.Creature octopus = null;
+        for (Sim.Creature f : sim.creatures) {
+            if (f.species.kind == Species.Kind.OCTOPUS) {
+                octopus = f;
+            }
+        }
+        check("an octopus to test with", octopus != null);
+        if (octopus == null) {
+            return;
+        }
+        octopus.tx = octopus.x + 500f;
+        octopus.timer = 100f;
+        octopus.lift = 0f;
+        octopus.liftTarget = 0f;
+        sim.update(1f / 30f);
+        float crawl = Math.abs(octopus.vx);
+        octopus.tx = octopus.x + 500f;
+        octopus.lift = 200f;
+        octopus.liftTarget = 200f;
+        sim.update(1f / 30f);
+        check("an octopus off the floor swims faster than it crawls", Math.abs(octopus.vx) > crawl * 1.5f);
+    }
+
+    static void strayBubblesNeedCreatures() {
+        Config c = new Config();
+        c.theme = Config.Theme.FISH_TANK;
+        c.fishCount = 0;
+        c.schools = 0;
+        c.seaLifeAmount = 0;
+        Sim sim = new Sim(c, 1920f, 10);
+        check("an empty tank has no creatures", sim.creatures.isEmpty());
+        for (int i = 0; i < 30 * 20; i++) {
+            sim.update(1f / 30f);
+        }
+        check("an empty tank still runs its airstone", !sim.bubbles.isEmpty());
+        Config stoneOnly = new Config();
+        stoneOnly.theme = Config.Theme.FISH_TANK;
+        stoneOnly.bubbles = 1;
+        Sim tank = new Sim(stoneOnly, 1920f, 11);
+        boolean fromStone = true;
+        int seen = 0;
+        for (int i = 0; i < 30 * 20; i++) {
+            tank.update(1f / 30f);
+            for (Sim.Bubble b : tank.bubbles) {
+                fromStone &= Math.abs(b.x - tank.airstones[0]) < 40f;
+                seen++;
+            }
+        }
+        check("airstone only: every bubble comes from the airstone", fromStone && seen > 0);
+    }
+
+    static void whalesVisitAtEveryAmount() {
+        for (int amount = 1; amount <= 3; amount++) {
+            Config c = new Config();
+            c.theme = Config.Theme.KELP_FOREST;
+            c.seaLife = new java.util.HashSet<>(java.util.Collections.singleton(Species.WHALES));
+            c.seaLifeAmount = amount;
+            Sim sim = new Sim(c, 1920f, 60 + amount);
+            Sim.Creature whale = null;
+            for (Sim.Creature f : sim.creatures) {
+                if (f.species.kind == Species.Kind.WHALE) {
+                    whale = f;
+                }
+            }
+            check("a whale is stocked at amount " + amount, whale != null);
+            if (whale == null) {
+                continue;
+            }
+            int arrivals = 0;
+            boolean was = whale.active;
+            for (int i = 0; i < 30 * 60 * 15; i++) {
+                sim.update(1f / 30f);
+                if (whale.active && !was) {
+                    arrivals++;
+                }
+                was = whale.active;
+            }
+            check("whales come back within 15 minutes at amount " + amount + " (" + arrivals + ")", arrivals >= 1);
+        }
     }
 
     static void tintFollowsTheClock() {

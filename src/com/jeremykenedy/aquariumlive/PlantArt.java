@@ -185,7 +185,7 @@ final class PlantArt {
                 p.setColor(0x60000000);
                 for (int j = 0; j < 9; j++) {
                     float ox = r(cx - rx, cx + rx);
-                    float oy = r(h - ry * 1.2f, h - 10);
+                    float oy = r(h - ry * 1.2f, h - 10f);
                     c.drawOval(new RectF(ox, oy, ox + r(6, 16), oy + r(5, 12)), p);
                 }
                 c.restore();

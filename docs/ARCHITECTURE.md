@@ -28,10 +28,12 @@ All source lives in `src/com/jeremykenedy/aquariumlive/`.
 
 | File | What it does |
 |------|--------------|
-| `Config.java` | Reads the saved settings, including Random and Surprise me, into plain fields. Anything missing or unrecognised falls back to its default. Also holds the day, evening and night light colours. |
+| `Config.java` | Reads the saved settings, including Random and Surprise me, into plain fields. Anything missing or unrecognised falls back to its default. Also holds the day, evening and night light colours and works out the render size for the Resolution setting. |
 | `Species.java` | Every fish and sea creature: size, speed, how it swims, which scene it lives in and which sea-life group it belongs to. |
 | `Sim.java` | The tank's state and motion. No Android code, so it is tested on a plain JVM. |
 | `Tone.java` | The colour maths for the cel-shaded and retro looks. Also plain Java and tested. |
+| `FramePacer.java` | The automatic frame rate: when to drop from 60 to a steady 30. Plain Java and tested. |
+| `ArtCache.java` | Deletes saved art from an older install. Plain Java and tested. |
 | `FishArt.java`, `CreatureArt.java`, `PlantArt.java` | Paint each fish, creature, plant, coral and rock from shapes described in code, using Android's 2D `Canvas`. |
 | `ArtStyle.java` | The finishing pass that gives painted art the chosen look: ink outlines, colour, cel bands or a reduced palette. |
 | `Textures.java` | Smaller generated textures: sand, bubbles, light patterns. |
@@ -72,7 +74,7 @@ Each sprite is painted on the CPU the first time it is needed:
 3. Finished art is uploaded to the GPU a few textures per frame, so no single frame stalls.
 4. New art fades in over 0.8 seconds rather than popping in. The whole scene fades in over 1.6 seconds when it starts.
 
-The saved art is tied to the installed version of the app: after an update, the old files are deleted and the art is painted again, because it may have changed.
+The saved art is tied to the installed version of the app: after an update, `ArtCache` deletes the old files and the art is painted again, because it may have changed.
 
 ## Rendering
 
@@ -87,7 +89,7 @@ The saved art is tied to the installed version of the app: after an update, the 
 
 ## Frame pacing
 
-Frames are driven by the display's refresh (`Choreographer`), not a timer, and the GL view only renders when asked.
+Frames are driven by the display's refresh (`Choreographer`), not a timer, and the GL view only renders when asked. `FramePacer` decides the rate.
 
 - **Automatic:** draws at 60 frames a second. After the first three seconds, while art is still being uploaded, it measures for four seconds; below 54 frames a second it switches to drawing on every other refresh, a steady 30. A steady 30 looks smoother than a rate that keeps changing between 30 and 60.
 - **60** or **30:** fixed.

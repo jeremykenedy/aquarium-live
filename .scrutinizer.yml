@@ -1,0 +1,20 @@
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - java-scrutinizer-run
+    tests:
+      environment:
+        docker: true
+      commands:
+        - docker run --rm eclipse-temurin:17-jdk-alpine sh -c "apk add --no-cache git bash && git clone --depth 1 https://github.com/jeremykenedy/aquarium-live.git /repo && cd /repo && ./test.sh"
+
+checks:
+  java: true
+
+filter:
+  excluded_paths:
+    - "test/*"
+    - "docs/*"
+    - "build/*"

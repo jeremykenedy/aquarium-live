@@ -153,6 +153,25 @@ public final class Config {
     }
 
     /**
+     * Render size for a screen of the given physical size, or null to draw at
+     * the window's own size. Automatic (0) uses the window, which is the size
+     * the TV actually composes app graphics at; a Fire TV 4K draws apps at
+     * 1920x1080 and scales them to the panel, so rendering larger there only
+     * costs speed. The retro look draws at 540 lines on Automatic for its
+     * chunky pixels. A fixed choice is capped at the screen's own height.
+     */
+    public int[] renderSize(int screenW, int screenH) {
+        int lines = resolution == 0 && style == Style.RETRO ? 540 : resolution;
+        int pw = Math.max(screenW, screenH);
+        int ph = Math.min(screenW, screenH);
+        if (lines == 0 || ph <= 0) {
+            return null;
+        }
+        int targetH = Math.min(lines, ph);
+        return new int[] {Math.round(targetH * pw / (float) ph), targetH};
+    }
+
+    /**
      * Light colour multiplier for the given lighting mode and local hour
      * (0 to 24, fractional). AUTO follows the clock: day from 8 to 17,
      * evening until 20, night until 6, then a dawn ramp back to day.

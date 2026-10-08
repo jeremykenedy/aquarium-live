@@ -16,8 +16,8 @@ TARGET_SDK=30
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SDK="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
-BUILD_TOOLS="$(ls -d "$SDK"/build-tools/* | sort -V | tail -1)"
-ANDROID_JAR="$(ls -d "$SDK"/platforms/android-* | sort -V | tail -1)/android.jar"
+BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+ANDROID_JAR="$(find "$SDK/platforms" -mindepth 1 -maxdepth 1 -type d -name 'android-*' | sort -V | tail -1)/android.jar"
 KEYSTORE="$HOME/.android/aquarium-live.jks"
 KEYPASS="$HOME/.android/aquarium-live.pass"
 OUT="$HERE/build"
