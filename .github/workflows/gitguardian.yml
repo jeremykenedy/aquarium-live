@@ -8,13 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      HAS_KEY: ${{ secrets.GITGUARDIAN_API_KEY != '' }}
     steps:
+      - name: Skip without an API key
+        if: env.HAS_KEY != 'true'
+        run: echo "::notice::GITGUARDIAN_API_KEY is not set for this repository, so the scan was skipped."
       - name: Checkout
+        if: env.HAS_KEY == 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
       - name: GitGuardian scan
+        if: env.HAS_KEY == 'true'
         uses: GitGuardian/ggshield-action@7f66d3be9c59a821dcf4f45ee5d929203a1a0b90 # v1.55.0
         env:
           GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
