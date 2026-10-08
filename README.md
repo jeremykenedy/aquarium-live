@@ -9,7 +9,6 @@
 <p align="center">A living aquarium screensaver for Fire TV, Android TV and Google TV. Every fish, plant and coral is drawn by the app in real time: no video, no downloads, no ads, and no tracking or analytics of any kind.</p>
 
 <p align="center">
-    <a href="https://github.com/jeremykenedy/aquarium-live/stargazers"><img src="https://img.shields.io/github/stars/jeremykenedy/aquarium-live?style=social" alt="Star aquarium-live on GitHub"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/releases/latest"><img src="https://img.shields.io/github/v/release/jeremykenedy/aquarium-live?label=Release" alt="Latest release"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/releases"><img src="https://img.shields.io/github/downloads/jeremykenedy/aquarium-live/total?label=Downloads" alt="Total release downloads"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
@@ -28,6 +27,7 @@
 <p align="center">
     <a href="https://github.com/jeremykenedy"><img src="https://img.shields.io/github/followers/jeremykenedy?label=Follow%20me&amp;style=social" alt="Follow me on GitHub"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live" title="Open the repository and click Star"><img src="https://img.shields.io/badge/Star-this%20repo-yellow?logo=github&amp;style=social" alt="Star this repo"></a>
+    <a href="https://github.com/jeremykenedy/aquarium-live/stargazers"><img src="https://img.shields.io/github/stars/jeremykenedy/aquarium-live?style=social" alt="Star aquarium-live on GitHub"></a>
     <a href="https://github.com/sponsors/jeremykenedy" title="Sponsor jeremykenedy"><img src="https://img.shields.io/badge/Sponsor-jeremykenedy-ea4aaa?logo=githubsponsors&amp;logoColor=white" alt="Sponsor jeremykenedy"></a>
 </p>
 
