@@ -18,6 +18,15 @@ fi
 grep -q 'android:allowBackup="false"' "$MANIFEST" || fail "$MANIFEST must turn backup off"
 grep -q 'android:permission="android.permission.BIND_DREAM_SERVICE"' "$MANIFEST" \
   || fail "$MANIFEST: the screensaver must only be startable by the system"
+grep -q 'android:networkSecurityConfig="@xml/network_security_config"' "$MANIFEST" \
+  || fail "$MANIFEST must use the network security config"
+grep -q 'android:usesCleartextTraffic="false"' "$MANIFEST" || fail "$MANIFEST must refuse cleartext traffic"
+grep -q 'cleartextTrafficPermitted="false"' res/xml/network_security_config.xml \
+  || fail "network_security_config.xml must refuse cleartext traffic"
+grep -q 'certificates src="user"' res/xml/network_security_config.xml && fail "user-installed certificates must not be trusted"
+exported="$(grep -c 'android:exported="true"' "$MANIFEST")"
+[[ "$exported" == 1 ]] || fail "$MANIFEST: only the launcher entry may be exported (found $exported)"
+grep -rqE 'getIntent\(|getExtras\(|onNewIntent' src && fail "the app must not read intent input"
 grep -rqE 'java\.net\.|HttpURLConnection|okhttp|WebView' src && fail "network code found in src"
 
 GITLEAKS_VERSION=8.30.1
@@ -44,4 +53,4 @@ tar -xzf "$TOOLS/$archive" -C "$TOOLS" gitleaks
 if [[ "$failed" != 0 ]]; then
   exit 1
 fi
-echo "Security checks passed: manifest, no network code, no secrets in files or history"
+echo "Security checks passed: manifest, network policy, one exported component, no intent input, no network code, no secrets in files or history"

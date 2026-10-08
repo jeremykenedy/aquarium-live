@@ -107,3 +107,5 @@ So **Automatic** draws at the size the TV gives the app's window. The fixed choi
 - The manifest requests no permissions at all, so the app has no network access. CI fails the build if a permission ever appears.
 - No third-party code: the APK is built from this repository's source and the Android framework only.
 - Settings and the art cache stay on the TV, and backup is turned off (`android:allowBackup="false"`).
+- A network security policy (`res/xml/network_security_config.xml`) refuses cleartext traffic and trusts only the system's certificates, so even if network code were ever added it could not talk to a server in the clear or through a user-installed certificate.
+- Only the launcher entry (`SettingsActivity`) is exported, because the TV's launcher is another app. It reads nothing from the intent that opens it. The screensaver service is not exported and is protected by `BIND_DREAM_SERVICE`, so only Android's system can start it. This was checked on the Fire TV, the Google TV 14 and Android TV 12 emulators and Android 5.1.
