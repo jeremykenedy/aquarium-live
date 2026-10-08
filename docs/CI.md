@@ -13,7 +13,6 @@ Six GitHub Actions workflows run on every push to `main` and every pull request.
 
 Every action is pinned to a full commit SHA, with the version in a comment.
 
-[Scrutinizer](https://scrutinizer-ci.com/g/jeremykenedy/aquarium-live/) builds from `.scrutinizer.yml` once the repository is added there: Java analysis, and the tests in a Temurin 17 container.
 
 ## Secrets
 

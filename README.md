@@ -29,6 +29,10 @@
 </p>
 
 <p align="center">
+    <a href="https://app.aikido.dev/repositories/3326671"><img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Secured by Aikido" height="32"></a>
+</p>
+
+<p align="center">
     <img src="docs/screenshots/coral-reef-realistic.jpg" alt="Coral reef scene running as the TV screensaver" width="800">
 </p>
 

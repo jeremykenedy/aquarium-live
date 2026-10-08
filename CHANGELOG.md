@@ -6,7 +6,7 @@
 
 - 100% line and branch coverage of every class that runs on a plain JVM. The render size, the automatic frame rate and the art cache clean-up moved out of the Android classes so they are tested.
 - Fixed the SonarCloud reliability findings: whole-number arithmetic passed where decimals are expected, and unchecked file deletes.
-- New Code style, Documentation and Security workflows and a Scrutinizer configuration. Every action is pinned to a commit.
+- New Code style, Documentation and Security workflows. Every action is pinned to a commit.
 - The screensaver service is no longer exported; only the system can start it. A network security policy refuses cleartext traffic and user-installed certificates.
 - Dependabot keeps the pinned GitHub Actions up to date.
 
