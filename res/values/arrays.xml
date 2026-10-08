@@ -5,12 +5,14 @@
         <item>Coral reef</item>
         <item>Kelp forest</item>
         <item>Fish tank</item>
+        <item>Random</item>
     </string-array>
     <string-array name="theme_values">
         <item>OCEAN</item>
         <item>REEF</item>
         <item>KELP_FOREST</item>
         <item>FISH_TANK</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="style_names">
         <item>Realistic</item>
@@ -19,6 +21,7 @@
         <item>3D movie</item>
         <item>Hand-painted classic</item>
         <item>Retro screensaver</item>
+        <item>Random</item>
     </string-array>
     <string-array name="style_values">
         <item>REALISTIC</item>
@@ -27,21 +30,48 @@
         <item>MOVIE</item>
         <item>PAINTED</item>
         <item>RETRO</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="plant_names">
         <item>Sparse</item>
         <item>Normal</item>
         <item>Lush</item>
+        <item>Random</item>
     </string-array>
     <string-array name="plant_values">
         <item>0.5</item>
         <item>1.0</item>
         <item>1.6</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="shimmer_names">
         <item>Off</item>
         <item>Soft</item>
         <item>Bright</item>
+        <item>Random</item>
+    </string-array>
+    <string-array name="level3_random_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>RANDOM</item>
+    </string-array>
+    <string-array name="level4_random_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>RANDOM</item>
+    </string-array>
+    <string-array name="speck_names">
+        <item>On</item>
+        <item>Off</item>
+        <item>Random</item>
+    </string-array>
+    <string-array name="speck_values">
+        <item>true</item>
+        <item>false</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="level3_values">
         <item>0</item>
@@ -53,17 +83,20 @@
         <item>Evening (warm)</item>
         <item>Night (dim)</item>
         <item>Follow the clock</item>
+        <item>Random</item>
     </string-array>
     <string-array name="lighting_values">
         <item>DAY</item>
         <item>EVENING</item>
         <item>NIGHT</item>
         <item>AUTO</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="bubble_names">
         <item>Off</item>
         <item>Airstone</item>
         <item>Airstone and fish bubbles</item>
+        <item>Random</item>
     </string-array>
     <string-array name="fish_names">
         <item>A few</item>
@@ -71,6 +104,7 @@
         <item>A bunch</item>
         <item>A lot</item>
         <item>A ton</item>
+        <item>Random</item>
     </string-array>
     <string-array name="fish_values">
         <item>6</item>
@@ -78,12 +112,14 @@
         <item>20</item>
         <item>30</item>
         <item>45</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="school_names">
         <item>None</item>
         <item>One school</item>
         <item>A few schools</item>
         <item>Huge schools</item>
+        <item>Random</item>
     </string-array>
     <string-array name="level4_values">
         <item>0</item>
@@ -95,11 +131,13 @@
         <item>Calm</item>
         <item>Normal</item>
         <item>Lively</item>
+        <item>Random</item>
     </string-array>
     <string-array name="speed_values">
         <item>0.6</item>
         <item>1.0</item>
         <item>1.4</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="sea_life_names">
         <item>Sharks</item>
@@ -111,6 +149,7 @@
         <item>Jellyfish</item>
         <item>Seahorses</item>
         <item>Crabs and starfish</item>
+        <item>A random mix each time</item>
     </string-array>
     <string-array name="sea_life_values">
         <item>sharks</item>
@@ -122,12 +161,14 @@
         <item>jellyfish</item>
         <item>seahorses</item>
         <item>crabs</item>
+        <item>RANDOM</item>
     </string-array>
     <string-array name="amount_names">
         <item>None</item>
         <item>A little</item>
         <item>Some</item>
         <item>Lots</item>
+        <item>Random</item>
     </string-array>
     <string-array name="brightness_names">
         <item>Full</item>

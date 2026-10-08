@@ -3,6 +3,8 @@
     <string name="app_name">Aquarium Live</string>
     <string name="preview">Preview</string>
     <string name="preview_summary">See the screensaver with these settings. Press any button to come back.</string>
+    <string name="surprise">Surprise me</string>
+    <string name="surprise_summary">Picks a random scene, look, lighting, fish and sea life every time the screensaver starts. Turn it off to choose each one, or set any one of them to Random.</string>
     <string name="cat_scene">Scene</string>
     <string name="cat_fish">Fish</string>
     <string name="cat_sea_life">Sea life</string>
@@ -14,12 +16,11 @@
     <string name="lighting">Day or night</string>
     <string name="bubbles">Bubbles</string>
     <string name="particles">Floating specks</string>
-    <string name="particles_summary">Tiny bits drifting in the water</string>
     <string name="fish_count">Fish</string>
     <string name="schools">Schools</string>
     <string name="speed">Swimming speed</string>
     <string name="sea_life">Which sea life</string>
-    <string name="sea_life_summary">Each scene shows only the animals that live there. The fish tank has none.</string>
+    <string name="sea_life_summary">Each scene shows only the animals that live there. The fish tank has none. Pick A random mix each time to let it choose.</string>
     <string name="sea_life_amount">How much sea life</string>
     <string name="brightness">Brightness</string>
     <string name="resolution">Resolution</string>

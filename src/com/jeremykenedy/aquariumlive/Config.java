@@ -1,6 +1,9 @@
 package com.jeremykenedy.aquariumlive;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Every user-facing option. Values arrive as the strings a ListPreference
@@ -30,7 +33,10 @@ public final class Config {
     public static final String SEA_LIFE = "sea_life";
     public static final String SEA_LIFE_AMOUNT = "sea_life_amount";
     public static final String SHIMMER = "shimmer";
-    public static final String PARTICLES = "particles";
+    public static final String PARTICLES = "specks";
+    public static final String SURPRISE = "surprise";
+    /** Stored by any list setting whose choice is Random, and in the sea-life set for a random mix. */
+    public static final String RANDOM = "RANDOM";
     public static final String LIGHTING = "lighting";
     public static final String BRIGHTNESS = "brightness";
     public static final String RESOLUTION = "resolution";
@@ -44,6 +50,10 @@ public final class Config {
     static final int[] RESOLUTIONS = {0, 2160, 1440, 1080};
     static final int[] FRAME_RATES = {0, 60, 30};
     static final int[] BRIGHTNESS_LEVELS = {100, 80, 60, 40};
+    static final float[] SPEEDS = {0.6f, 1f, 1.4f};
+    static final float[] PLANT_DENSITIES = {0.5f, 1f, 1.6f};
+    static final int[] BUBBLE_LEVELS = {0, 1, 2};
+    static final Lighting[] RANDOM_LIGHTING = {Lighting.DAY, Lighting.EVENING, Lighting.NIGHT};
 
     public Theme theme = Theme.REEF;
     public Style style = Style.REALISTIC;
@@ -70,24 +80,76 @@ public final class Config {
     public boolean clock = false;
 
     public static Config fromMap(Map<String, ?> values) {
+        return fromMap(values, new Random());
+    }
+
+    /**
+     * Any setting left on Random, or every scene, look and content setting
+     * when Surprise me is on, is picked from its choices with {@code rng}.
+     * Display settings (brightness, resolution, frame rate, clock) never are.
+     */
+    public static Config fromMap(Map<String, ?> values, Random rng) {
         Config c = new Config();
-        c.theme = parseEnum(values.get(THEME), Theme.class, c.theme);
-        c.style = parseEnum(values.get(STYLE), Style.class, c.style);
-        c.fishCount = parseChoice(values.get(FISH_COUNT), FISH_COUNTS, c.fishCount);
-        c.schools = parseChoice(values.get(SCHOOLS), SCHOOL_LEVELS, c.schools);
-        c.seaLife = parseSet(values.get(SEA_LIFE), c.seaLife);
-        c.seaLifeAmount = parseChoice(values.get(SEA_LIFE_AMOUNT), SEA_LIFE_LEVELS, c.seaLifeAmount);
-        c.shimmer = parseChoice(values.get(SHIMMER), SHIMMER_LEVELS, c.shimmer);
-        c.speed = parseFloat(values.get(SPEED), 0.4f, 2f, c.speed);
-        c.plantDensity = parseFloat(values.get(PLANTS), 0.3f, 2f, c.plantDensity);
-        c.bubbles = Math.round(parseFloat(values.get(BUBBLES), 0f, 2f, c.bubbles));
-        c.particles = parseBool(values.get(PARTICLES), c.particles);
-        c.lighting = parseEnum(values.get(LIGHTING), Lighting.class, c.lighting);
+        boolean all = parseBool(values.get(SURPRISE), false);
+        c.theme = random(all, values.get(THEME)) ? pick(Theme.values(), rng) : parseEnum(values.get(THEME), Theme.class, c.theme);
+        c.style = random(all, values.get(STYLE)) ? pick(Style.values(), rng) : parseEnum(values.get(STYLE), Style.class, c.style);
+        c.lighting = random(all, values.get(LIGHTING)) ? pick(RANDOM_LIGHTING, rng) : parseEnum(values.get(LIGHTING), Lighting.class, c.lighting);
+        c.fishCount = random(all, values.get(FISH_COUNT)) ? pick(FISH_COUNTS, rng) : parseChoice(values.get(FISH_COUNT), FISH_COUNTS, c.fishCount);
+        c.schools = random(all, values.get(SCHOOLS)) ? pick(SCHOOL_LEVELS, rng) : parseChoice(values.get(SCHOOLS), SCHOOL_LEVELS, c.schools);
+        c.seaLife = all || isRandomSet(values.get(SEA_LIFE)) ? randomMix(rng) : parseSet(values.get(SEA_LIFE), c.seaLife);
+        c.seaLifeAmount = random(all, values.get(SEA_LIFE_AMOUNT)) ? pick(SEA_LIFE_LEVELS, rng) : parseChoice(values.get(SEA_LIFE_AMOUNT), SEA_LIFE_LEVELS, c.seaLifeAmount);
+        c.shimmer = random(all, values.get(SHIMMER)) ? pick(SHIMMER_LEVELS, rng) : parseChoice(values.get(SHIMMER), SHIMMER_LEVELS, c.shimmer);
+        c.speed = random(all, values.get(SPEED)) ? pick(SPEEDS, rng) : parseFloat(values.get(SPEED), 0.4f, 2f, c.speed);
+        c.plantDensity = random(all, values.get(PLANTS)) ? pick(PLANT_DENSITIES, rng) : parseFloat(values.get(PLANTS), 0.3f, 2f, c.plantDensity);
+        c.bubbles = random(all, values.get(BUBBLES)) ? pick(BUBBLE_LEVELS, rng) : Math.round(parseFloat(values.get(BUBBLES), 0f, 2f, c.bubbles));
+        c.particles = random(all, values.get(PARTICLES)) ? rng.nextBoolean() : parseBool(values.get(PARTICLES), c.particles);
         c.brightness = parseChoice(values.get(BRIGHTNESS), BRIGHTNESS_LEVELS, 100) / 100f;
         c.resolution = parseChoice(values.get(RESOLUTION), RESOLUTIONS, c.resolution);
         c.fps = parseChoice(values.get(FPS), FRAME_RATES, c.fps);
         c.clock = parseBool(values.get(CLOCK), c.clock);
         return c;
+    }
+
+    private static boolean random(boolean all, Object value) {
+        return all || (value != null && RANDOM.equalsIgnoreCase(value.toString().trim()));
+    }
+
+    private static boolean isRandomSet(Object value) {
+        if (!(value instanceof Set)) {
+            return false;
+        }
+        for (Object o : (Set<?>) value) {
+            if (RANDOM.equalsIgnoreCase(String.valueOf(o))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Each sea-life group has an even chance of being in; never none, so the choice is not wasted. */
+    static Set<String> randomMix(Random rng) {
+        Set<String> out = new HashSet<>();
+        for (String g : Species.GROUPS) {
+            if (rng.nextBoolean()) {
+                out.add(g);
+            }
+        }
+        if (out.isEmpty()) {
+            out.add(Species.GROUPS[rng.nextInt(Species.GROUPS.length)]);
+        }
+        return out;
+    }
+
+    private static <T> T pick(T[] options, Random rng) {
+        return options[rng.nextInt(options.length)];
+    }
+
+    private static int pick(int[] options, Random rng) {
+        return options[rng.nextInt(options.length)];
+    }
+
+    private static float pick(float[] options, Random rng) {
+        return options[rng.nextInt(options.length)];
     }
 
     /**
