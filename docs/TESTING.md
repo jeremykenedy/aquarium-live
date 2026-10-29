@@ -38,7 +38,7 @@ The tests run on a plain JVM, with no Android device or emulator. They cover the
 ./coverage.sh
 ```
 
-Runs the same tests under JaCoCo and writes `build/jacoco.xml` (for SonarCloud) and `build/jacoco.csv`. The first run downloads the JaCoCo agent and CLI from Maven Central into `build/jacoco/`.
+Runs the same tests under JaCoCo and writes `build/jacoco.xml` and `build/jacoco.csv`. The first run downloads the JaCoCo agent and CLI from Maven Central into `build/jacoco/`.
 
 Every class that can run on a plain JVM is covered in full:
 
@@ -53,7 +53,7 @@ Every class that can run on a plain JVM is covered in full:
 
 ## What the tests do not cover
 
-The other classes call Android: the painting (`FishArt`, `CreatureArt`, `PlantArt`, `ArtStyle`, `Textures`), the OpenGL renderer (`AquariumRenderer`, `Gl`) and the Android components (`AquariumView`, `AquariumDream`, `SettingsActivity`, `PreviewActivity`). They cannot run on a plain JVM, so they are listed in `sonar.coverage.exclusions` in `sonar-project.properties` and checked on devices instead. Logic that does not need Android is kept out of them so it can be tested: the render size lives in `Config`, the frame-rate switch in `FramePacer`, and the cache clean-up in `ArtCache`.
+The other classes call Android: the painting (`FishArt`, `CreatureArt`, `PlantArt`, `ArtStyle`, `Textures`), the OpenGL renderer (`AquariumRenderer`, `Gl`) and the Android components (`AquariumView`, `AquariumDream`, `SettingsActivity`, `PreviewActivity`). They cannot run on a plain JVM, so their visual behavior is checked on devices instead. Logic that does not need Android is kept out of them so it can be tested: the render size lives in `Config`, the frame-rate switch in `FramePacer`, and the cache clean-up in `ArtCache`.
 
 ## Device testing
 

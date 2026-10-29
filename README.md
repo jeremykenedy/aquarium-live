@@ -15,17 +15,7 @@
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/style.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/style.yml/badge.svg" alt="Code style"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/docs.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/docs.yml/badge.svg" alt="Documentation"></a>
     <a href="https://github.com/jeremykenedy/aquarium-live/actions/workflows/security.yml"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/security.yml/badge.svg" alt="Security"></a>
-    <a href="https://dashboard.gitguardian.com/"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/gitguardian.yml/badge.svg" alt="GitGuardian scan"></a>
-    <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://github.com/jeremykenedy/aquarium-live/actions/workflows/sonarcloud.yml/badge.svg" alt="SonarQube Cloud scan"></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=jeremykenedy_aquarium-live"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=alert_status" alt="Quality Gate Status"></a>
-    <a href="https://sonarcloud.io/summary/overall?id=jeremykenedy_aquarium-live&amp;branch=main"><img src="https://sonarcloud.io/api/project_badges/measure?project=jeremykenedy_aquarium-live&amp;metric=coverage" alt="Coverage"></a>
-    <a href="https://www.codefactor.io/repository/github/jeremykenedy/aquarium-live"><img src="https://www.codefactor.io/repository/github/jeremykenedy/aquarium-live/badge" alt="CodeFactor"></a>
-    <a href="https://app.codacy.com/gh/jeremykenedy/aquarium-live/dashboard"><img src="https://app.codacy.com/project/badge/Grade/7f53f465f89b4a3997e89b8883cc95ae" alt="Codacy Badge"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-</p>
-
-<p align="center">
-    <a href="https://app.aikido.dev/repositories/3326671"><img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Secured by Aikido" height="32"></a>
 </p>
 
 <p align="center">
@@ -322,7 +312,7 @@ aquarium-live/
 ├── AndroidManifest.xml            # The app, its screensaver and its settings screen; no permissions
 ├── build.sh                       # Builds and signs the APK with the SDK build tools (no Gradle)
 ├── test.sh                        # Runs the plain-JVM tests
-├── coverage.sh                    # Runs the tests under JaCoCo for SonarCloud
+├── coverage.sh                    # Runs the tests under JaCoCo
 ├── src/com/jeremykenedy/aquariumlive/
 │   ├── AquariumDream.java         # The screensaver Android starts when the TV is idle
 │   ├── SettingsActivity.java      # The settings screen and launcher entry
@@ -373,7 +363,7 @@ Runs the plain-JVM tests for the settings, the simulation and the shading maths:
 
 ## Continuous integration
 
-Every push to `main` and every pull request runs six workflows: the tests on Java 17 and 21 and an APK build that fails if it requests any permission; code style; the documentation checks; a security check of the manifest and a gitleaks secret scan of the files and history; a GitGuardian scan; and a SonarCloud analysis with coverage. Codacy and CodeFactor also analyze every push. See [CI](docs/CI.md).
+Every push to `main` and every pull request runs the tests on Java 17 and 21, an APK build that checks permissions, code style, documentation checks, and independent manifest and secret checks. Third-party analysis services are deferred. See [CI](docs/CI.md).
 
 ## Documentation
 

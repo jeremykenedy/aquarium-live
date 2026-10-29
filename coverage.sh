@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs the plain-JVM tests under JaCoCo and writes build/jacoco.xml for SonarCloud.
+# Runs the plain-JVM tests under JaCoCo and writes build/jacoco.xml for local inspection.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 JACOCO_VERSION=0.8.12
